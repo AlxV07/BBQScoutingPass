@@ -1,8 +1,8 @@
 var config_data = `
 {
   "dataFormat": "tsv",
-  "title": "Scouting PASS 2024",
-  "page_title": "Crescendo",
+  "title": "BBQScoutingPASS 2024",
+  "page_title": "{Credit to Hexu ;P} Crescendo UwU",
   "checkboxAs": "10",
   "prematch": [
     { "name": "Scouter Initials",
@@ -10,12 +10,13 @@ var config_data = `
       "type": "scouter",
       "size": 5,
       "maxSize": 5,
+      "defaultValue": "poo",
       "required": "true"
     },
     { "name": "Event",
       "code": "e",
       "type": "event",
-      "defaultValue": "2023tnkn",
+      "defaultValue": "poo",
       "required": "true"
     },
     { "name": "Match Level",
@@ -34,6 +35,7 @@ var config_data = `
       "type": "match",
       "min": 1,
       "max": 150,
+      "defaultValue": 1,
       "required": "true"
     },
     { "name": "Robot",
@@ -47,12 +49,14 @@ var config_data = `
         "r3": "Red-3",
         "b3": "Blue-3"
       },
+      "defaultValue": "r1",
       "required":"true"
     },
     { "name": "Team #",
       "code": "t",
       "type": "team",
       "min": 1,
+      "defaultValue": 2714,
       "max": 99999
     },
     { "name": "Auto Start Position",
@@ -60,7 +64,6 @@ var config_data = `
       "type": "clickable_image",
       "filename": "2024/field_image.png",
       "clickRestriction": "one",
-      "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72",
       "shape": "circle 5 black red true"
     }
   ],
