@@ -20,7 +20,7 @@ const config_data = `
       "type": "scouter",
       "size": 5,
       "maxSize": 5,
-      "defaultValue": "AJ",
+      "defaultValue": "Jenny",
       "required": "true"
     },
     { "name": "Event",
@@ -138,13 +138,13 @@ const config_data = `
     }
   ],
   "postmatch": [
-    { "name": "Fouls",
-      "code": "fo",
-      "type": "counter"
-    },
     { "name": "Was Fouled",
       "code": "wf",
       "type": "bool"
+    },
+    { "name": "Fouls",
+      "code": "fo",
+      "type": "counter"
     },
     { "name": "High Notes",
       "code": "hn",
