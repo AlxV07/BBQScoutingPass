@@ -1,3 +1,12 @@
+// TODO Auton Bicycle
+
+// TODO Teleop Bicycle
+// Source:radio, ShotFrom:clickable_image, target_radio, status:bool
+
+// TODO Bicycle behind-the-scenes timekeeping
+
+// TODO Bicycle NextCycle button
+
 const config_data = `
 {
   "dataFormat": "tsv",
@@ -5,18 +14,19 @@ const config_data = `
   "page_title": "FRC 2024: Crescendo",
   "checkboxAs": "10",
   "prematch": [
-    { "name": "Scouter Initials",
+    { 
+      "name": "Scouter Initials",
       "code": "s",
       "type": "scouter",
       "size": 5,
       "maxSize": 5,
-      "defaultValue": "poo",
+      "defaultValue": "Alx",
       "required": "true"
     },
     { "name": "Event",
       "code": "e",
       "type": "event",
-      "defaultValue": "poo",
+      "defaultValue": "Null",
       "required": "true"
     },
     { "name": "Match Level",
@@ -81,6 +91,7 @@ const config_data = `
       "type": "counter"
     }
   ],
+  
   "teleop": [
     { "name": "Amp Scores",
       "code": "tas",
@@ -104,8 +115,14 @@ const config_data = `
         "x": "Not Attempted"
       },
       "defaultValue": "x"
+    },
+    { "name": "Cycle Timer",
+      "code": "ct",
+      "type": "timer"
     }
   ],
+  
+  
   "endgame": [
     { "name": "Stage Timer",
       "code": "dt",
