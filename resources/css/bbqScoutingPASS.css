@@ -14,7 +14,7 @@ html, body {
     background-color: black;
 }
 
-#prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table {
+#prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
     font-family: Alx;
     text-align: center;
     color: white;
@@ -120,7 +120,7 @@ h2{
     display: inline-block;
 }
 
-#prevButton1, #prevButton2, #prevButton3, #prevButton4, #prevButton5, #prevButton6, #prevButton7, #prevButton8, #prevButton9{
+#prevButton1, #prevButton2, #prevButton3, #prevButton4, #prevButton5, #prevButton6, #prevButton7, #prevButton8, #prevButton9 {
     font-family: Alx;
     background-color: white;
     color: black;

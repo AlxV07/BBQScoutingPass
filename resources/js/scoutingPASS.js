@@ -1,21 +1,21 @@
 // ScoutingPASS.js
 //
-// The guts of the ScountingPASS application
-// Written by Team 2451 - PWNAGE
+// The guts of the ScoutingPASS application
+// Written by Team 2451 - PWNAGE; (HACK-EDITED BY ALX :DDD)
 
 document.addEventListener("touchstart", startTouch, false);
 document.addEventListener("touchend", moveTouch, false);
 
 // Swipe Up / Down / Left / Right
-var initialX = null;
-var xThreshold = 0.3;
-var slide = 0;
-var enableGoogleSheets = false;
-var pitScouting = false;
-var checkboxAs = 'YN';
+let initialX = null;
+let xThreshold = 0.3;
+let slide = 0;
+let enableGoogleSheets = false;
+let pitScouting = false;
+let checkboxAs = 'YN';
 
 // Options
-var options = {
+let options = {
   correctLevel: QRCode.CorrectLevel.L,
   quietZone: 15,
   quietZoneColor: '#FFFFFF'
@@ -23,12 +23,13 @@ var options = {
 
 // Must be filled in: e=event, m=match#, l=level(q,qf,sf,f), t=team#, r=robot(r1,r2,b1..), s=scouter
 //var requiredFields = ["e", "m", "l", "t", "r", "s", "as"];
-var requiredFields = ["e", "m", "l", "r", "s", "as"];
+let requiredFields = ["e", "m", "l", "r", "s", "as"];
 
 function addTimer(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
-  cell1.setAttribute("colspan", 2);
+  let lineBreak;
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.setAttribute("colspan", "2");
   cell1.setAttribute("style", "text-align: center;");
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
@@ -42,12 +43,12 @@ function addTimer(table, idx, name, data) {
 
   idx += 1
   row = table.insertRow(idx);
-  cell = row.insertCell(0);
+  let cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
 
   if (data.type == 'cycle') {
-    var ct = document.createElement('input');
+    let ct = document.createElement('input');
     ct.setAttribute("type", "hidden");
     ct.setAttribute("id", "cycletime_" + data.code);
     if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
@@ -63,17 +64,17 @@ function addTimer(table, idx, name, data) {
     ct.setAttribute("value", "");
     ct.setAttribute("disabled", "");
     cell.appendChild(ct);
-    var lineBreak = document.createElement("br");
+    lineBreak = document.createElement("br");
     cell.appendChild(lineBreak);
   }
-  var button1 = document.createElement("input");
+  const button1 = document.createElement("input");
   button1.setAttribute("id", "start_" + data.code);
   button1.setAttribute("type", "button");
   button1.setAttribute("onclick", "timer(this.parentElement)");
   button1.setAttribute("value", "Start");
   cell.appendChild(button1);
 
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   if (data.type == 'timer') {
     inp.classList.add("timer");
   } else {
@@ -95,23 +96,23 @@ function addTimer(table, idx, name, data) {
   inp.setAttribute("maxLength", 7);
   cell.appendChild(inp);
 
-  var button2 = document.createElement("input");
+  const button2 = document.createElement("input");
   button2.setAttribute("id", "clear_" + data.code);
   button2.setAttribute("type", "button");
   button2.setAttribute("onclick", "resetTimer(this.parentElement)");
   button2.setAttribute("value", "Reset");
   cell.appendChild(button2);
-  var lineBreak = document.createElement("br");
+  lineBreak = document.createElement("br");
   cell.appendChild(lineBreak);
 
   if (data.type == 'cycle') {
-    var button3 = document.createElement("input");
+    const button3 = document.createElement("input");
     button3.setAttribute("id", "cycle_" + data.code);
     button3.setAttribute("type", "button");
     button3.setAttribute("onclick", "newCycle(this.parentElement)");
     button3.setAttribute("value", "New Cycle");
     cell.appendChild(button3);
-    var button4 = document.createElement("input");
+    const button4 = document.createElement("input");
     button4.setAttribute("id", "undo_" + data.code);
     button4.setAttribute("type", "button");
     button4.setAttribute("onclick", "undoCycle(this.parentElement)");
@@ -126,7 +127,7 @@ function addTimer(table, idx, name, data) {
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
-  var inp = document.createElement('input');
+  inp = document.createElement('input');
   inp.setAttribute("type", "hidden");
   inp.setAttribute("id", "status_" + data.code);
   inp.setAttribute("value", "stopped");
@@ -138,7 +139,7 @@ function addTimer(table, idx, name, data) {
   cell.appendChild(inp);
 
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    const def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
@@ -149,28 +150,28 @@ function addTimer(table, idx, name, data) {
 }
 
 function addCounter(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
+  let row = table.insertRow(idx);
+  const cell1 = row.insertCell(0);
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  var cell2 = row.insertCell(1);
+  let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
   cell2.classList.add("field");
 
-  var button1 = document.createElement("input");
+  const button1 = document.createElement("input");
   button1.setAttribute("type", "button");
   button1.setAttribute("id", "minus_" + data.code);
   button1.setAttribute("onclick", "counter(this.parentElement, -1)");
   button1.setAttribute("value", "-");
   cell2.appendChild(button1);
 
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   inp.classList.add("counter");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "text");
@@ -186,7 +187,7 @@ function addCounter(table, idx, name, data) {
   inp.setAttribute("maxLength", 2);
   cell2.appendChild(inp);
 
-  var button2 = document.createElement("input");
+  const button2 = document.createElement("input");
   button2.setAttribute("type", "button");
   button2.setAttribute("id", "plus_" + data.code);
   button2.setAttribute("onclick", "counter(this.parentElement, 1)");
@@ -215,8 +216,8 @@ function addCounter(table, idx, name, data) {
 }
 
 function addClickableImage(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell = row.insertCell(0);
+  let row = table.insertRow(idx);
+  let cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
   cell.classList.add("title");
@@ -294,7 +295,7 @@ function addClickableImage(table, idx, name, data) {
   row.setAttribute("style", "display:none");
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
-  var inp = document.createElement('input');
+  let inp = document.createElement('input');
   inp.setAttribute("type", "hidden");
   inp.setAttribute("id", "XY_" + data.code);
   inp.setAttribute("value", "[]");
@@ -400,20 +401,20 @@ function addClickableImage(table, idx, name, data) {
 }
 
 function addText(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  var cell2 = row.insertCell(1);
+  let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
   cell2.classList.add("field");
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "text");
   if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
@@ -453,20 +454,20 @@ function addText(table, idx, name, data) {
 }
 
 function addNumber(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  var cell2 = row.insertCell(1);
+  let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
   cell2.classList.add("field");
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "number");
   if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
@@ -516,14 +517,14 @@ function addNumber(table, idx, name, data) {
 }
 
 function addRadio(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
+  const row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  var cell2 = row.insertCell(1);
+  let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
@@ -534,14 +535,15 @@ function addRadio(table, idx, name, data) {
   ) {
     cell2.setAttribute("onchange", "updateMatchStart(event)");
   }
-  var checked = null
+  let checked = null
   if (data.hasOwnProperty('defaultValue')) {
     checked = data.defaultValue;
   }
+  let keys;
   if (data.hasOwnProperty('choices')) {
     keys = Object.keys(data.choices);
     keys.forEach(c => {
-      var inp = document.createElement("input");
+      let inp = document.createElement("input");
       inp.setAttribute("id", "input_" + data.code + "_" + c);
       inp.setAttribute("type", "radio");
       if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
@@ -557,14 +559,14 @@ function addRadio(table, idx, name, data) {
       cell2.innerHTML += data.choices[c];
     });
   }
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   inp.setAttribute("id", "display_" + data.code);
   inp.setAttribute("hidden", "");
   inp.setAttribute("value", "");
   cell2.appendChild(inp);
 
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    let def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
@@ -575,20 +577,20 @@ function addRadio(table, idx, name, data) {
 }
 
 function addCheckbox(table, idx, name, data) {
-  var row = table.insertRow(idx);
-  var cell1 = row.insertCell(0);
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
   cell1.classList.add("title");
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  var cell2 = row.insertCell(1);
+  let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
   cell2.classList.add("field");
-  var inp = document.createElement("input");
+  let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "checkbox");
   if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
@@ -603,7 +605,7 @@ function addCheckbox(table, idx, name, data) {
   }
 
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    let def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
@@ -614,18 +616,19 @@ function addCheckbox(table, idx, name, data) {
 }
 
 function addElement(table, idx, data) {
-  var type = null;
-  var name = 'Default Name';
+  let type = null;
+  let name = 'Default Name';
   if (data.hasOwnProperty('name')) {
     name = data.name
   }
+  let err;
   if (data.hasOwnProperty('type')) {
     type = data.type
   } else {
     console.log("No type specified");
     console.log("Data: ")
     console.log(data);
-    err = { code: "err", defaultValue: "No type specified: " + data };
+    err = {code: "err", defaultValue: "No type specified: " + data};
     idx = addText(table, idx, name, err);
     return
   }
@@ -666,15 +669,16 @@ function addElement(table, idx, data) {
 }
 
 function configure() {
+  let mydata;
   try {
-    var mydata = JSON.parse(config_data);
+    mydata = JSON.parse(config_data);
   } catch (err) {
     console.log(`Error parsing configuration file`)
     console.log(err.message)
     console.log('Use a tool like http://jsonlint.com/ to help you debug your config file')
-    var table = document.getElementById("prematch_table")
-    var row = table.insertRow(0);
-    var cell1 = row.insertCell(0);
+    let table = document.getElementById("prematch_table")
+    let row = table.insertRow(0);
+    let cell1 = row.insertCell(0);
     cell1.innerHTML = `Error parsing configuration file: ${err.message}<br><br>Use a tool like <a href="http://jsonlint.com/">http://jsonlint.com/</a> to help you debug your config file`
     return -1
   }
@@ -720,32 +724,32 @@ function configure() {
   }
 
   // Configure prematch screen
-  var pmc = mydata.prematch;
-  var pmt = document.getElementById("prematch_table");
+  let pmc = mydata.prematch;
+  let pmt = document.getElementById("prematch_table");
   var idx = 0;
   pmc.forEach(element => {
     idx = addElement(pmt, idx, element);
   });
 
   // Configure auton screen
-  var ac = mydata.auton;
-  var at = document.getElementById("auton_table");
+  let ac = mydata.auton;
+  let at = document.getElementById("auton_table");
   idx = 0;
   ac.forEach(element => {
     idx = addElement(at, idx, element);
   });
 
   // Configure teleop screen
-  var tc = mydata.teleop;
-  var tt = document.getElementById("teleop_table");
+  let tc = mydata.teleop;
+  let tt = document.getElementById("teleop_table");
   idx = 0;
   tc.forEach(element => {
     idx = addElement(tt, idx, element);
   });
 
   // Configure endgame screen
-  var egc = mydata.endgame;
-  var egt = document.getElementById("endgame_table");
+  let egc = mydata.endgame;
+  let egt = document.getElementById("endgame_table");
   idx = 0;
   egc.forEach(element => {
     idx = addElement(egt, idx, element);
@@ -782,10 +786,10 @@ return document.forms.scoutingForm.l.value
 
 
 function validateData() {
-  var ret = true;
-  var errStr = "";
+  let ret = true;
+  let errStr = "";
   for (rf of requiredFields) {
-    var thisRF = document.forms.scoutingForm[rf];
+    let thisRF = document.forms.scoutingForm[rf];
     if (thisRF.value == "[]" || thisRF.value.length == 0) {
       if (rf == "as") {
         rftitle = "Auto Start Position"
@@ -858,7 +862,6 @@ function getData(dataFormat) {
 
 function updateQRHeader() {
   let str = 'Event: !EVENT! Match: !MATCH! Robot: !ROBOT! Team: !TEAM!';
-
   if (!pitScouting) {
     str = str
       .replace('!EVENT!', document.getElementById("input_e").value)
@@ -869,7 +872,6 @@ function updateQRHeader() {
     str = 'Pit Scouting - Team !TEAM!'
       .replace('!TEAM!', document.getElementById("input_t").value);
   }
-
   document.getElementById("display_qr-info").textContent = str;
 }
 
@@ -882,13 +884,10 @@ function qr_regenerate() {
       return false
     }
   }
-
   // Get data
-  data = getData(dataFormat)
-
+  let data = getData(dataFormat)  // bug
   // Regenerate QR Code
   qr.makeCode(data)
-
   updateQRHeader()
   return true
 }
@@ -898,8 +897,8 @@ function qr_clear() {
 }
 
 function clearForm() {
-  var match = 0;
-  var e = 0;
+  let match = 0;
+  let e = 0;
 
   if (pitScouting) {
     swipePage(-1);
@@ -941,14 +940,14 @@ function clearForm() {
       continue;
     }
 
-    radio = code.indexOf("_")
+    let radio = code.indexOf("_")
     if (radio > -1) {
-      var baseCode = code.substr(0, radio)
+      let baseCode = code.substr(0, radio)
       if (e.checked) {
         e.checked = false
         document.getElementById("display_" + baseCode).value = ""
       }
-      var defaultValue = document.getElementById("default_" + baseCode).value
+      let defaultValue = document.getElementById("default_" + baseCode).value
       if (defaultValue != "") {
         if (defaultValue == e.value) {
           e.checked = true
@@ -958,15 +957,15 @@ function clearForm() {
     } else {
       if (e.type == "number" || e.type == "text" || e.type == "hidden") {
         if ((e.className == "counter") ||
-          (e.className == "timer") ||
-          (e.className == "cycle")) {
+            (e.className == "timer") ||
+            (e.className == "cycle")) {
           e.value = 0
           if (e.className == "timer" || e.className == "cycle") {
             // Stop interval
-            timerStatus = document.getElementById("status_" + code);
-            startButton = document.getElementById("start_" + code);
-            intervalIdField = document.getElementById("intervalId_" + code);
-            var intervalId = intervalIdField.value;
+            let timerStatus = document.getElementById("status_" + code);
+            let startButton = document.getElementById("start_" + code);
+            let intervalIdField = document.getElementById("intervalId_" + code);
+            let intervalId = intervalIdField.value;
             timerStatus.value = 'stopped';
             startButton.innerHTML = "Start";
             if (intervalId != '') {
@@ -1002,8 +1001,8 @@ function moveTouch(e) {
     return;
   }
 
-  var currentX = e.changedTouches[0].screenX;
-  var diffX = initialX - currentX;
+  let currentX = e.changedTouches[0].screenX;
+  let diffX = initialX - currentX;
 
   // sliding horizontally
   if (diffX / screen.width > xThreshold) {
@@ -1017,39 +1016,40 @@ function moveTouch(e) {
 };
 
 function swipePage(increment) {
-  if (qr_regenerate() == true) {
-    slides = document.getElementById("main-panel-holder").children
+  let q = qr_regenerate()
+  if (q == true) {
+    let slides = document.getElementById("main-panel-holder").children
     if (slide + increment < slides.length && slide + increment >= 0) {
       slides[slide].style.display = "none";
       slide += increment;
       window.scrollTo(0, 0);
       slides[slide].style.display = "table";
       document.getElementById('data').innerHTML = "";
-      document.getElementById('copyButton').setAttribute('value','Copy Data');
+      document.getElementById('copyButton').setAttribute('value', 'Copy Data');
     }
   }
 }
 
 function drawFields(name) {
-  var fields = document.querySelectorAll("[id*='canvas_']");
+  let fields = document.querySelectorAll("[id*='canvas_']");
 
   for (f of fields) {
     code = f.id.substring(7);
-    var img = document.getElementById("img_" + code);
-    var shape = document.getElementById("shape_" + code);
+    let img = document.getElementById("img_" + code);
+    let shape = document.getElementById("shape_" + code);
     let shapeArr = shape.value.split(' ');
-    var ctx = f.getContext("2d");
+    let ctx = f.getContext("2d");
     ctx.clearRect(0, 0, f.width, f.height);
     ctx.drawImage(img, 0, 0, f.width, f.height);
 
-    var xyStr = document.getElementById("XY_" + code).value
+    let xyStr = document.getElementById("XY_" + code).value
     if (JSON.stringify(xyStr).length > 2) {
       pts = Array.from(JSON.parse(xyStr))
       for (p of pts) {
-        var coord = p.split(",")
-        var centerX = coord[0];
-        var centerY = coord[1];
-        var radius = 5;
+        let coord = p.split(",")
+        let centerX = coord[0];
+        let centerY = coord[1];
+        let radius = 5;
         ctx.beginPath();
         if (shapeArr[0].toLowerCase() == 'circle') {
           ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);
@@ -1096,7 +1096,7 @@ function onFieldClick(event) {
   let allowableResponses = document.getElementById("allowableResponses" + base).value;
 
   if(allowableResponses != "none"){
-    allowableResponsesList = allowableResponses.split(',').map(Number);
+    let allowableResponsesList = allowableResponses.split(',').map(Number);
     if (allowableResponsesList.indexOf(box)==-1){
       return;
     }
@@ -1172,8 +1172,8 @@ function getIdBase(name) {
 function getTeamName(teamNumber) {
   if (teamNumber !== undefined) {
     if (teams) {
-      var teamKey = "frc" + teamNumber;
-      var ret = "";
+      let teamKey = "frc" + teamNumber;
+      let ret = "";
       Array.from(teams).forEach(team => ret = team.key == teamKey ? team.nickname : ret);
       return ret;
     }
@@ -1185,7 +1185,7 @@ function getMatch(matchKey) {
   //This needs to be different than getTeamName() because of how JS stores their data
   if (matchKey !== undefined) {
     if (schedule) {
-      var ret = "";
+      let ret = "";
       Array.from(schedule).forEach(match => ret = match.key == matchKey ? match.alliances : ret);
       return ret;
     }
@@ -1230,8 +1230,8 @@ function updateMatchStart(event) {
 }
 
 function onTeamnameChange(event) {
-  var newNumber = document.getElementById("input_t").value;
-  var teamLabel = document.getElementById("teamname-label");
+  let newNumber = document.getElementById("input_t").value;
+  let teamLabel = document.getElementById("teamname-label");
   if (newNumber != "") {
     teamLabel.innerText = getTeamName(newNumber) != "" ? "You are scouting " + getTeamName(newNumber) : "That team isn't playing this match, please double check to verify correct number";
   } else {
@@ -1249,9 +1249,9 @@ function counter(element, step) {
   let target = event.target;
   let base = getIdBase(target.id);
 
-  var ctr = element.getElementsByClassName("counter")[0];
+  let ctr = element.getElementsByClassName("counter")[0];
   let cycleTimer = document.getElementById("cycleTimer" + base);
-  var result = parseInt(ctr.value) + step;
+  let result = parseInt(ctr.value) + step;
 
   if (isNaN(result)) {
     result = 0;
@@ -1269,8 +1269,7 @@ function counter(element, step) {
   }
 }
 
-function newCycle(event)
-{
+function newCycle(event) {
   let timerID = event.firstChild;
   let base = getIdBase(timerID.id);
   let inp = document.getElementById("input" + base)
@@ -1279,7 +1278,7 @@ function newCycle(event)
 
   if (cycleTime > 0) {
     let cycleInput = document.getElementById("cycletime" + base);
-    var tempValue = Array.from(JSON.parse(cycleInput.value));
+    let tempValue = Array.from(JSON.parse(cycleInput.value));
     tempValue.push(cycleTime);
     cycleInput.value = JSON.stringify(tempValue);
     let d = document.getElementById("display" + base);
@@ -1292,7 +1291,7 @@ function undoCycle(event) {
   let uId = getIdBase(undoID.id);
   //Getting rid of last value
   let cycleInput = document.getElementById("cycletime" + uId);
-  var tempValue = Array.from(JSON.parse(cycleInput.value));
+  let tempValue = Array.from(JSON.parse(cycleInput.value));
   tempValue.pop();
   cycleInput.value = JSON.stringify(tempValue);
   let d = document.getElementById("display" + uId);
@@ -1309,7 +1308,7 @@ function resetTimer(event) {
   timerStatus = document.getElementById("status" + tId);
   startButton = document.getElementById("start" + tId);
   intervalIdField = document.getElementById("intervalId" + tId);
-  var intervalId = intervalIdField.value;
+  let intervalId = intervalIdField.value;
   timerStatus.value = 'stopped';
   startButton.setAttribute("value", "Start");
   if (intervalId != '') {
@@ -1324,16 +1323,16 @@ function timer(event) {
   timerStatus = document.getElementById("status" + tId);
   startButton = document.getElementById("start" + tId);
   intervalIdField = document.getElementById("intervalId" + tId);
-  var statusValue = timerStatus.value;
-  var intervalId = intervalIdField.value;
+  let statusValue = timerStatus.value;
+  let intervalId = intervalIdField.value;
   if (statusValue == 'stopped') {
     timerStatus.value = 'started';
     startButton.setAttribute("value", "Stop");
 
-    var intId = setInterval(() => {
+    let intId = setInterval(() => {
       if (document.getElementById("status" + tId).value == 'started') {
         inp = document.getElementById("input" + tId);
-        var t = parseFloat(inp.value);
+        let t = parseFloat(inp.value);
         t += 0.1;
         tTrunc = t.toFixed(1)
         inp.value = tTrunc;
@@ -1355,7 +1354,7 @@ function undo(event) {
   //Getting rid of last value
   changingXY = document.getElementById("XY" + getIdBase(undoID.id));
   changingInput = document.getElementById("input" + getIdBase(undoID.id));
-  var tempValue = Array.from(JSON.parse(changingXY.value));
+  let tempValue = Array.from(JSON.parse(changingXY.value));
   tempValue.pop();
   changingXY.value = JSON.stringify(tempValue);
 
@@ -1367,7 +1366,7 @@ function undo(event) {
 
 function flip(event) {
   let flipID = event.firstChild;
-  var flipImg = document.getElementById("canvas" + getIdBase(flipID.id));
+  let flipImg = document.getElementById("canvas" + getIdBase(flipID.id));
   if (flipImg.style.transform == "") {
     flipImg.style.transform = 'rotate(180deg)';
   } else {

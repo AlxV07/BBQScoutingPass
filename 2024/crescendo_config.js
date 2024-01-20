@@ -1,8 +1,8 @@
-var config_data = `
+const config_data = `
 {
   "dataFormat": "tsv",
   "title": "BBQScoutingPASS 2024",
-  "page_title": "{Credit to Hexu ;P} Crescendo UwU",
+  "page_title": "FRC 2024: Crescendo",
   "checkboxAs": "10",
   "prematch": [
     { "name": "Scouter Initials",
@@ -64,7 +64,7 @@ var config_data = `
       "type": "clickable_image",
       "filename": "2024/field_image.png",
       "clickRestriction": "one",
-      "shape": "circle 5 black red true"
+      "shape": "circle 4 white orangered true"
     }
   ],
   "auton": [
