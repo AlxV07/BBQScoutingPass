@@ -20,7 +20,7 @@ const config_data = `
       "type": "scouter",
       "size": 5,
       "maxSize": 5,
-      "defaultValue": "Jenny",
+      "defaultValue": "",
       "required": "true"
     },
     { "name": "Event",
