@@ -1,7 +1,3 @@
-
-// TODO Auton Bicycle source
-
-
 const config_data = `
 {
     "dataFormat": "kvs",

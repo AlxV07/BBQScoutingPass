@@ -270,10 +270,17 @@ function addBicycle(table, idx, name, data) {
      "code": "${code_identifier}src",
      "type": "radio",
      "choices": {
-      "hpg": "HP Ground<br>",
-      "hpo": "HP (other)<br>",
-      "oga": "O.G. Auton<br>",
-      "g": "Ground"
+      "b1": "B1",
+      "c1": "C1",
+      "r1": "R1<br>",
+      "b2": "B2",
+      "c2": "C2",
+      "r2": "R2<br>",
+      "b3": "B3",
+      "c3": "C3",
+      "r3": "R3<br>",
+      "c4": "C4<br>",
+      "c5": "C5"
      }
      }`)
   } else {  // Teleop intake
