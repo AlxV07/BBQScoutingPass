@@ -1,15 +1,11 @@
-// TODO Auton Bicycle
 
-// TODO Teleop Bicycle
-// Source:radio, ShotFrom:clickable_image, target_radio, status:bool
+// TODO Bicycle StartCycle button + behind-the-scenes timekeeping
+// TODO Bicycle ShotFrom:clickable_image
 
-// TODO Bicycle behind-the-scenes timekeeping
-
-// TODO Bicycle NextCycle button
 
 const config_data = `
 {
-  "dataFormat": "tsv",
+  "dataFormat": "kvs",
   "title": "BBQScoutingPASS 2024",
   "page_title": "FRC 2024: Crescendo",
   "checkboxAs": "10",
@@ -93,35 +89,16 @@ const config_data = `
   ],
   
   "teleop": [
-    { "name": "Amp Scores",
-      "code": "tas",
-      "type": "counter"
-    },
-    { "name": "Speaker Scores",
-      "code": "tss",
-      "type": "counter"
-    },
-    { "name": "Times Amplified",
-      "code": "tta",
-      "type": "counter"
-    },
-    { "name": "Pickup From",
-      "code": "tpu",
-      "type": "radio",
-      "choices": {
-        "s": "Source<br>",
-        "f": "Floor<br>",
-        "b": "Both<br>",
-        "x": "Not Attempted"
-      },
-      "defaultValue": "x"
-    },
     { "name": "Cycle Timer",
       "code": "ct",
       "type": "timer"
+    },
+    { "name": "Bicycle",
+      "code": "teleopbicycle",
+      "type": "bicycle",
+      "bicycle_id": "teleop"
     }
   ],
-  
   
   "endgame": [
     { "name": "Stage Timer",

@@ -21,9 +21,587 @@ let options = {
   quietZoneColor: '#FFFFFF'
 };
 
-// Must be filled in: e=event, m=match#, l=level(q,qf,sf,f), t=team#, r=robot(r1,r2,b1..), s=scouter
-//var requiredFields = ["e", "m", "l", "t", "r", "s", "as"];
-let requiredFields = ["e", "m", "l", "r", "s", "as"];
+// Must be filled in: s=scouter, e=event,  l=level(q,qf,sf,f), m=match#, r=robot(r1,r2,b1..), t=team#
+// let requiredFields = ["s", "e", "m", "l", "r", "as"];  // requires auton start pos ("as")
+let requiredFields = ["s", "e", "m", "l", "r"];
+
+let cycles = []
+class Cycle {
+  static src_condense_map = new Map([
+      ['hpg', 0],
+      ['hpo', 1],
+      ['oga', 2],
+      ['g', '3']
+  ])
+  static target_condense_map = new Map([
+        ['par', 0],
+        ['amp', 1],
+        ['spe', 2],
+        ['amp_spe', 3]
+  ])
+
+  constructor(source, shot_from, target, status, time) {
+    this.source = source;      // 0=hp_ground, 1=hp_other, 2=o.g.auton i.e. auton_leftover, 3=ground
+    this.shot_from = shot_from;   // zone_id
+    this.target = target;      // 0=partner, 1=amp, 2=speaker, 3=amplified_speaker
+    this.status = status;      // 0=unsuccessful, 1=successful
+    this.time = time;
+  }
+  condense() {
+    // sxytftime
+    // s = source
+    // x, y = grid_x, grid_y
+    // t = target
+    // f = successful?
+    // time = `sec[0:-1].sec[-1]`  // Removed precision point
+    return `${this.source}${this.shot_from}${this.target}${this.status}${this.time}`
+  }
+
+  toString() {
+    return this.condense()
+  }
+}
+
+function startCycle(code_identifier) {
+
+}
+
+function nextCycle(code_identifier) {
+  saveCycle(code_identifier)
+  try {
+    clearCycle(code_identifier)
+  } catch (e) {
+    alert(e)
+  }
+}
+
+function saveCycle(code_identifier) {
+  try {
+    let Form = document.forms.scoutingForm;
+    let src = Form[`${code_identifier}src`]
+    let src_value = Cycle.src_condense_map.get(src.value ? src.value.replace(/"/g, '').replace(/;/g, "-") : "");
+
+    let shotfrom = document.getElementById('canvas_' + code_identifier + 'shotfrom')
+    let shotfrom_value = shotfrom.getAttribute('grid_coords')
+
+    let tar = Form[`${code_identifier}tar`]
+    let tar_value = Cycle.target_condense_map.get(tar.value ? tar.value.replace(/"/g, '').replace(/;/g, "-") : "");
+
+    let success = Form[`${code_identifier}success`]
+    let success_value = success.checked ? 1 : 0;
+
+    let cycle = new Cycle(
+        src_value,
+        shotfrom_value,
+        tar_value,
+        success_value,
+        9,
+        // document.getElementById('time_id thing').value,
+    )
+    cycles.push(cycle)
+    alert(cycles)
+  } catch (e) {
+    alert(e)
+  }
+}
+
+function clearCycle(code_identifier) {
+  // Clear XY coordinates
+  let inputs = document.querySelectorAll("[id*='XY_']");
+  for (e of inputs) {
+    code = e.id.substring(3)
+    e.value = "[]"
+  }
+
+  inputs = new Set(document.querySelectorAll("[id*='input_']"));
+  for (e of inputs) {
+    code = e.id.substring(6)
+    if (!code.startsWith(bicycle_component_identifier)) {
+      continue
+    }
+    if (e.className == "clickableImage") {
+      e.value = "[]";
+      continue;
+    }
+    let radio = code.indexOf("_")
+    if (radio > -1) {
+      let baseCode = code.substr(0, radio)
+      if (e.checked) {
+        e.checked = false
+        document.getElementById("display_" + baseCode).value = ""
+      }
+      let defaultValue = document.getElementById("default_" + baseCode).value
+      if (defaultValue != "") {
+        if (defaultValue == e.value) {
+          e.checked = true
+          document.getElementById("display_" + baseCode).value = defaultValue
+        }
+      }
+    } else {
+      if (e.type == "number" || e.type == "text" || e.type == "hidden") {
+        if ((e.className == "counter") ||
+            (e.className == "timer") ||
+            (e.className == "cycle")) {
+          e.value = 0
+          if (e.className == "timer" || e.className == "cycle") {
+            // Stop interval
+            let timerStatus = document.getElementById("status_" + code);
+            let startButton = document.getElementById("start_" + code);
+            let intervalIdField = document.getElementById("intervalId_" + code);
+            let intervalId = intervalIdField.value;
+            timerStatus.value = 'stopped';
+            startButton.innerHTML = "Start";
+            if (intervalId != '') {
+              clearInterval(intervalId);
+            }
+            intervalIdField.value = '';
+            if (e.className == "cycle") {
+              document.getElementById("cycletime_" + code).value = "[]"
+              document.getElementById("display_" + code).value = ""
+            }
+          }
+        } else {
+          e.value = ""
+        }
+      } else if (e.type == "checkbox") {
+        if (e.checked == true) {
+          e.checked = false
+        }
+      } else {
+        console.log("unsupported input type")
+      }
+    }
+  }
+  drawFields()
+}
+
+function addStartCycleButton(table, idx, name, data, code_identifier) {
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.classList.add("title");
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  // let cell2 = row.insertCell(1);
+  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
+  if (data.hasOwnProperty('tooltip')) {
+    cell1.setAttribute("title", data.tooltip);
+  }
+  // cell2.classList.add("field");
+  let inp = document.createElement("input");
+  inp.setAttribute("id", "input_" + data.code);
+  inp.setAttribute("type", "button");
+  inp.setAttribute("onclick", `startCycle(\"${code_identifier}\")`)
+  inp.setAttribute("value", "Start Cycle")
+  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
+    inp.setAttribute("name", data.gsCol);
+  } else {
+    inp.setAttribute("name", data.code);
+  }
+  if (data.hasOwnProperty('defaultValue')) {
+    inp.setAttribute("value", data.defaultValue);
+  }
+  if (data.hasOwnProperty('disabled')) {
+    inp.setAttribute("disabled", "");
+  }
+  cell1.appendChild(inp);
+  return idx + 1;
+}
+
+function addNextCycleButton(table, idx, name, data, code_identifier) {
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.classList.add("title");
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  // let cell2 = row.insertCell(1);
+  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
+  if (data.hasOwnProperty('tooltip')) {
+    cell1.setAttribute("title", data.tooltip);
+  }
+  // cell2.classList.add("field");
+  let inp = document.createElement("input");
+  inp.setAttribute("id", "input_" + data.code);
+  inp.setAttribute("type", "button");
+  inp.setAttribute("onclick", `nextCycle(\"${code_identifier}\")`)
+  inp.setAttribute("value", "Next Cycle")
+  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
+    inp.setAttribute("name", data.gsCol);
+  } else {
+    inp.setAttribute("name", data.code);
+  }
+  if (data.hasOwnProperty('defaultValue')) {
+    inp.setAttribute("value", data.defaultValue);
+  }
+  if (data.hasOwnProperty('disabled')) {
+    inp.setAttribute("disabled", "");
+  }
+  cell1.appendChild(inp);
+  return idx + 1;
+}
+
+bicycle_component_identifier = 'cycle'
+
+function addBicycle(table, idx, name, data) {
+  let code_identifier;
+  if (data.bicycle_id == 'auton') {
+    code_identifier = bicycle_component_identifier + 'a';
+  } else {  // teleop
+    code_identifier = bicycle_component_identifier + 't';
+  }
+
+  let start_button_data = JSON.parse(`
+  { 
+    "name": "Start Cycle:",
+    "code": "${code_identifier}startc",
+    "type": "startCycleButton"
+  }`)
+  idx = addStartCycleButton(table, idx, start_button_data.name, start_button_data, code_identifier)
+
+  let source_data = JSON.parse(`{ 
+   "name": "Source",
+   "code": "${code_identifier}src",
+   "type": "radio",
+   "choices": {
+    "hpg": "HP Ground<br>",
+    "hpo": "HP (other)<br>",
+    "oga": "O.G. Auton<br>",
+    "g": "Ground"
+   },
+   "defaultValue": "hpg"
+   }`)
+  idx = addRadio(table, idx, source_data.name, source_data) // Source
+
+  let shot_from_data = JSON.parse(`{
+      "name": "Shot From Region:",
+      "code": "${code_identifier}shotfrom",
+      "type": "shotfrom",
+      "filename": "2024/field_image.png",
+      "clickRestriction": "one",
+      "shape": "rect 4 white orangered true"
+  }`)
+  idx = addShotFrom(table, idx, shot_from_data.name, shot_from_data)
+
+  let target_data = JSON.parse(`
+  { 
+   "name": "Target",
+   "code": "${code_identifier}tar",
+   "type": "radio",
+   "choices": {
+    "par": "Alliance Parter<br>",
+    "amp": "Amp<br>",
+    "spe": "Speaker<br>",
+    "amp_spe": "Amplified Speaker"
+   },
+   "defaultValue": "par"
+  }`)
+  idx = addRadio(table, idx, target_data.name, target_data)  // Target
+
+  let successful_data = JSON.parse(`
+  { 
+   "name": "Successful?",
+   "code": "${code_identifier}success",
+   "type": "bool"
+   }`)
+  idx = addCheckbox(table, idx, successful_data.name, successful_data) // Successful?
+
+  let next_button_data = JSON.parse(`
+  { 
+    "name": "Next Cycle:",
+    "code": "${code_identifier}nc",
+    "type": "nextCycleButton"
+  }`)
+  idx = addNextCycleButton(table, idx, next_button_data.name, next_button_data, code_identifier)
+
+  return idx
+}
+
+function onShotFromClicked(event) {
+  try {
+    let target = event.target;
+    let base = getIdBase(target.id);
+    //Resolution height and width (e.g. 52x26)
+    let resX = 12;
+    let resY = 6;
+    let dimensions = document.getElementById("dimensions" + base);
+    if (dimensions.value != "") {
+      let arr = dimensions.value.split(' ');
+      resX = arr[0];
+      resY = arr[1];
+    }
+    //Turns coordinates into a numeric box
+    let box = ((Math.ceil(event.offsetY / target.height * resY) - 1) * resX) + Math.ceil(event.offsetX / target.width * resX);
+    let coords = event.offsetX + "," + event.offsetY;
+    let allowableResponses = document.getElementById("allowableResponses" + base).value;
+    if (allowableResponses != "none") {
+      let allowableResponsesList = allowableResponses.split(',').map(Number);
+      if (allowableResponsesList.indexOf(box) == -1) {
+        return;
+      }
+    }
+
+    let centerX = event.offsetX
+    let centerY = event.offsetY
+    let y_level = centerY < 80 ? 0 : 1
+    let x_level;
+    if (centerX < 35) {
+      x_level = 0
+    } else if (centerX < 100) {
+      x_level = 1
+    } else if (centerX < 150) {
+      x_level = 2
+    } else if (centerX < 200) {
+      x_level = 3
+    } else if (centerX < 260) {
+      x_level = 4
+    } else {
+      x_level = 5
+    }
+    shotfrom_component = document.getElementById('canvas' + base)
+    shotfrom_component.setAttribute('grid_coords', `${x_level}${y_level}`)
+
+    //Cumulating values
+    let changingXY = document.getElementById("XY" + base);
+    let changingInput = document.getElementById("input" + base);
+    let clickRestriction = document.getElementById("clickRestriction" + base).value;
+    let toggleClick = document.getElementById("toggleClick" + base).value;
+    let cycleTimer = document.getElementById("cycleTimer" + base);
+    let boxArr = Array.from(JSON.parse(changingInput.value));
+    let xyArr = Array.from(JSON.parse(changingXY.value));
+
+    if ((toggleClick.toLowerCase() == 'true') &&
+        (boxArr.includes(box))) {
+      // Remove it
+      let idx = boxArr.indexOf(box);
+      boxArr.splice(idx, 1);
+      xyArr.splice(idx, 1);
+      changingInput.value = JSON.stringify(boxArr);
+      changingXY.value = JSON.stringify(xyArr);
+    } else {
+      if (JSON.stringify(changingXY.value).length <= 2) {
+        changingXY.value = JSON.stringify([coords]);
+        changingInput.value = JSON.stringify([box]);
+      } else if (clickRestriction == "one") {
+        // Replace box and coords
+        changingXY.value = JSON.stringify([coords]);
+        changingInput.value = JSON.stringify([box]);
+      } else if (clickRestriction == "onePerBox") {
+        // Add if box already not in box list/Array
+        if (!boxArr.includes(box)) {
+          boxArr.push(box);
+          changingInput.value = JSON.stringify(boxArr);
+
+          coords = findMiddleOfBox(box, target.width, target.height, resX, resY);
+          xyArr.push(coords);
+          changingXY.value = JSON.stringify(xyArr);
+        }
+      } else {
+        // No restrictions - add to array
+        xyArr.push(coords);
+        changingXY.value = JSON.stringify(xyArr);
+
+        boxArr.push(box);
+        changingInput.value = JSON.stringify(boxArr);
+      }
+      // If associated with cycleTimer - send New Cycle EVENT
+      if (cycleTimer != null) {
+        document.getElementById("cycle_" + cycleTimer.value).click();
+      }
+    }
+
+    drawFields()
+  } catch (e) {
+    alert(e)
+  }
+}
+
+function addShotFrom(table, idx, name, data) {
+  let row = table.insertRow(idx);
+  let cell = row.insertCell(0);
+  cell.setAttribute("colspan", 2);
+  cell.setAttribute("style", "text-align: center;");
+  cell.classList.add("title");
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  cell.innerHTML = name;
+  if (data.hasOwnProperty('tooltip')) {
+    cell.setAttribute("title", data.tooltip);
+  }
+
+  let showFlip = true;
+  if (data.hasOwnProperty('showFlip')) {
+    if (data.showFlip.toLowerCase() == 'false') {
+      showFlip = false;
+    }
+  }
+
+  let showUndo = true;
+  if (data.hasOwnProperty('showUndo')) {
+    if (data.showUndo.toLowerCase() == 'false') {
+      showUndo = false;
+    }
+  }
+
+  if (showFlip || showUndo) {
+    idx += 1
+    row = table.insertRow(idx);
+    cell = row.insertCell(0);
+    cell.setAttribute("colspan", 2);
+    cell.setAttribute("style", "text-align: center;");
+
+    if (showUndo) {
+      // Undo button
+      let undoButton = document.createElement("input");
+      undoButton.setAttribute("type", "button");
+      undoButton.setAttribute("onclick", "undo(this.parentElement)");
+      undoButton.setAttribute("value", "Undo");
+      undoButton.setAttribute("id", "undo_" + data.code);
+      undoButton.setAttribute("class", "undoButton");
+      cell.appendChild(undoButton);
+    }
+
+    if (showFlip) {
+      // Flip button
+      let flipButton = document.createElement("input");
+      flipButton.setAttribute("type", "button");
+      flipButton.setAttribute("onclick", "flip(this.parentElement)");
+      flipButton.setAttribute("value", "Flip Image");
+      flipButton.setAttribute("id", "flip_" + data.code);
+      flipButton.setAttribute("class", "flipButton");
+      if (showUndo) {
+        flipButton.setAttribute("margin-left", '8px');
+      }
+      cell.appendChild(flipButton);
+    }
+  }
+
+  idx += 1;
+  row = table.insertRow(idx);
+  cell = row.insertCell(0);
+  cell.setAttribute("colspan", 2);
+  cell.setAttribute("style", "text-align: center;");
+  var canvas = document.createElement('canvas');
+  //canvas.onclick = onFieldClick;
+  canvas.setAttribute("onclick", "onShotFromClicked(event)");
+  canvas.setAttribute("class", "field-image-src");
+  canvas.setAttribute("id", "canvas_" + data.code);
+  canvas.innerHTML = "No canvas support";
+  cell.appendChild(canvas);
+
+  idx += 1;
+  row = table.insertRow(idx);
+  row.setAttribute("style", "display:none");
+  cell = row.insertCell(0);
+  cell.setAttribute("colspan", 2);
+  let inp = document.createElement('input');
+  inp.setAttribute("type", "hidden");
+  inp.setAttribute("id", "XY_" + data.code);
+  inp.setAttribute("value", "[]");
+  cell.appendChild(inp);
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
+    inp.setAttribute("name", data.gsCol);
+  } else {
+    inp.setAttribute("name", data.code);
+  }
+  inp.setAttribute("id", "input_" + data.code);
+  inp.setAttribute("value", "[]");
+  inp.setAttribute("class", "clickableImage");
+
+  cell.appendChild(inp);
+
+  // TODO: Make these more efficient/elegant
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  inp.setAttribute("id", "clickRestriction_" + data.code);
+  inp.setAttribute("value", "none");
+  if (data.hasOwnProperty('clickRestriction')) {
+    if ((data.clickRestriction == "one") ||
+        (data.clickRestriction == "onePerBox")) {
+      inp.setAttribute("value", data.clickRestriction);
+    }
+  }
+  cell.appendChild(inp);
+
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  inp.setAttribute("id", "allowableResponses_" + data.code);
+  inp.setAttribute("value", "none");
+  if (data.hasOwnProperty('allowableResponses')) {
+    let responses = data.allowableResponses.split(' ').map(Number)
+    console.log(responses)
+    inp.setAttribute("value", responses);
+  }
+  cell.appendChild(inp);
+
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  inp.setAttribute("id", "dimensions_" + data.code);
+  inp.setAttribute("value", "12 6");
+  if (data.hasOwnProperty('dimensions')) {
+    if (data.dimensions != "") {
+      // TODO: Add validation for "X Y" format
+      inp.setAttribute("value", data.dimensions);
+    }
+  }
+  cell.appendChild(inp);
+
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  inp.setAttribute("id", "shape_" + data.code);
+  // Default shape: white circle of size 5 not filled in
+  inp.setAttribute("value", "rect 5 white white true");
+  if (data.hasOwnProperty('shape')) {
+    if (data.shape != "") {
+      // TODO: Add validation for "shape size color fill" format
+      inp.setAttribute("value", data.shape);
+    }
+  }
+  cell.appendChild(inp);
+
+  inp = document.createElement('input');
+  inp.setAttribute("hidden", "");
+  inp.setAttribute("id", "toggleClick_" + data.code);
+  inp.setAttribute("value", "false");
+  if (data.hasOwnProperty('toggleClick')) {
+    if (data.toggleClick != "") {
+      // TODO: Add validation for true/false format
+      inp.setAttribute("value", data.toggleClick);
+    }
+  }
+  cell.appendChild(inp);
+
+  if (data.hasOwnProperty('cycleTimer')) {
+    if (data.cycleTimer != "") {
+      inp = document.createElement('input');
+      inp.setAttribute("hidden", "");
+      inp.setAttribute("id", "cycleTimer_" + data.code);
+      inp.setAttribute("value", data.cycleTimer);
+      cell.appendChild(inp);
+    }
+  }
+
+  idx += 1
+  row = table.insertRow(idx);
+  row.setAttribute("style", "display:none");
+  cell = row.insertCell(0);
+  cell.setAttribute("colspan", 2);
+  var img = document.createElement('img');
+  img.src = data.filename;
+  img.setAttribute("id", "img_" + data.code);
+  img.setAttribute("class", "field-image-src");
+  img.setAttribute("onload", "drawFields()");
+  img.setAttribute("hidden", "");
+  cell.appendChild(img);
+
+  return idx + 1
+}
 
 function addTimer(table, idx, name, data) {
   let lineBreak;
@@ -449,7 +1027,6 @@ function addText(table, idx, name, data) {
     def.setAttribute("value", data.defaultValue);
     cell2.appendChild(def);
   }
-
   return idx + 1
 }
 
@@ -616,15 +1193,13 @@ function addCheckbox(table, idx, name, data) {
 }
 
 function addElement(table, idx, data) {
-  let type = null;
   let name = 'Default Name';
   if (data.hasOwnProperty('name')) {
     name = data.name
   }
+
   let err;
-  if (data.hasOwnProperty('type')) {
-    type = data.type
-  } else {
+  if (!data.hasOwnProperty('type')) {
     console.log("No type specified");
     console.log("Data: ")
     console.log(data);
@@ -632,35 +1207,24 @@ function addElement(table, idx, data) {
     idx = addText(table, idx, name, err);
     return
   }
-  if (type == 'counter') {
+
+  if (data.type == 'counter') {
     idx = addCounter(table, idx, name, data);
-  } else if ((data.type == 'scouter') ||
-    (data.type == 'event') ||
-    (data.type == 'text')
-  ) {
+  } else if (data.type == 'bicycle') {
+    idx = addBicycle(table, idx, name, data)
+  } else if ((data.type == 'scouter') || (data.type == 'event') || (data.type == 'text')) {
     idx = addText(table, idx, name, data);
-  } else if ((data.type == 'level') ||
-    (data.type == 'radio') ||
-    (data.type == 'robot')
-  ) {
+  } else if ((data.type == 'level') || (data.type == 'radio') || (data.type == 'robot')) {
     idx = addRadio(table, idx, name, data);
-  } else if ((data.type == 'match') ||
-    (data.type == 'team') ||
-    (data.type == 'number')
-  ) {
+  } else if ((data.type == 'match') || (data.type == 'team') || (data.type == 'number')) {
     idx = addNumber(table, idx, name, data);
-  } else if ((data.type == 'field_image') ||
-    (data.type == 'clickable_image')) {
+  } else if ((data.type == 'field_image') || (data.type == 'clickable_image')) {
     idx = addClickableImage(table, idx, name, data);
-  } else if ((data.type == 'bool') ||
-    (data.type == 'checkbox') ||
-    (data.type == 'pass_fail')
-  ) {
+  } else if ((data.type == 'bool') || (data.type == 'checkbox') || (data.type == 'pass_fail')) {
     idx = addCheckbox(table, idx, name, data);
   } else if (data.type == 'counter') {
     idx = addCounter(table, idx, name, data);
-  } else if ((data.type == 'timer') ||
-    (data.type == 'cycle')) {
+  } else if ((data.type == 'timer') || (data.type == 'cycle')) {
     idx = addTimer(table, idx, name, data);
   } else {
     console.log(`Unrecognized type: ${data.type}`);
@@ -774,16 +1338,15 @@ function getRobot(){
   return document.forms.scoutingForm.r.value;
 }
 
-
 function resetRobot() {
-for ( rb of document.getElementsByName('r')) { rb.checked = false };
+  for (rb of document.getElementsByName('r')) {
+    rb.checked = false
+  }
 }
-
 
 function getLevel(){
-return document.forms.scoutingForm.l.value
+  return document.forms.scoutingForm.l.value
 }
-
 
 function validateData() {
   let ret = true;
@@ -808,11 +1371,13 @@ function validateData() {
 }
 
 function getData(dataFormat) {
-  var Form = document.forms.scoutingForm;
-  var UniqueFieldNames = [];
-  var fd = new FormData();
-  var str = [];
+  let Form = document.forms.scoutingForm;
+  let UniqueFieldNames = [];
+  let fd = new FormData();
+  let str = [];
 
+  let checkedChar;
+  let uncheckedChar;
   switch(checkboxAs) {
     case 'TF':
       checkedChar = 'T';
@@ -823,24 +1388,30 @@ function getData(dataFormat) {
       uncheckedChar = '0';
       break;
     default:
-      var checkedChar = 'Y';
-      var uncheckedChar = 'N';
+      checkedChar = 'Y';
+      uncheckedChar = 'N';
   }
 
   // collect the names of all the elements in the form
-  var fieldnames = Array.from(Form.elements, formElmt => formElmt.name);
-
+  let fieldnames = Array.from(Form.elements, formElmt => formElmt.name);
   // make sure to add the name attribute only to elements from which you want to collect values.  Radio button groups all share the same name
   // so those element names need to be de-duplicated here as well.
-  fieldnames.forEach((fieldname) => { if (fieldname != "" && !UniqueFieldNames.includes(fieldname)) { UniqueFieldNames.push(fieldname) } });
+  fieldnames.forEach((fieldname) => {
+    if (fieldname != "" && !UniqueFieldNames.includes(fieldname)) {
+      UniqueFieldNames.push(fieldname)
+    }
+  });
 
   UniqueFieldNames.forEach((fieldname) => {
-    var thisField = Form[fieldname];
-
+    if (fieldname.startsWith(bicycle_component_identifier)) {
+      return
+    }
+    let thisField = Form[fieldname];
+    let thisFieldValue;
     if (thisField.type == 'checkbox') {
-      var thisFieldValue = thisField.checked ? checkedChar : uncheckedChar;
+      thisFieldValue = thisField.checked ? checkedChar : uncheckedChar;
     } else {
-      var thisFieldValue = thisField.value ? thisField.value.replace(/"/g, '').replace(/;/g,"-") : "";
+      thisFieldValue = thisField.value ? thisField.value.replace(/"/g, '').replace(/;/g, "-") : "";
     }
     fd.append(fieldname, thisFieldValue)
   })
@@ -854,7 +1425,7 @@ function getData(dataFormat) {
     Array.from(fd.keys()).forEach(thisKey => {
       str.push(fd.get(thisKey))
     });
-    return str.join("\t")
+    return str.join(";")
   } else {
     return "unsupported dataFormat"
   }
@@ -875,7 +1446,6 @@ function updateQRHeader() {
   document.getElementById("display_qr-info").textContent = str;
 }
 
-
 function qr_regenerate() {
   // Validate required pre-match date (event, match, level, robot, scouter)
   if (!pitScouting) {  
@@ -890,10 +1460,6 @@ function qr_regenerate() {
   qr.makeCode(data)
   updateQRHeader()
   return true
-}
-
-function qr_clear() {
-  qr.clear()
 }
 
 function clearForm() {
@@ -989,12 +1555,13 @@ function clearForm() {
       }
     }
   }
+  cycles = []
   drawFields()
 }
 
 function startTouch(e) {
   initialX = e.touches[0].screenX;
-};
+}
 
 function moveTouch(e) {
   if (initialX === null) {
@@ -1013,7 +1580,7 @@ function moveTouch(e) {
     swipePage(-1);
   }
   initialX = null;
-};
+}
 
 function swipePage(increment) {
   let q = qr_regenerate()
@@ -1032,7 +1599,6 @@ function swipePage(increment) {
 
 function drawFields(name) {
   let fields = document.querySelectorAll("[id*='canvas_']");
-
   for (f of fields) {
     code = f.id.substring(7);
     let img = document.getElementById("img_" + code);
@@ -1051,8 +1617,38 @@ function drawFields(name) {
         let centerY = coord[1];
         let radius = 5;
         ctx.beginPath();
-        if (shapeArr[0].toLowerCase() == 'circle') {
+        let drawType = shapeArr[0].toLowerCase()
+        if (drawType == 'circle') {
           ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);
+        } else if (drawType == 'rect') {
+          try {
+            let y_level = centerY < 80 ? 0 : 80
+            let height = 80
+            let x_level;
+            let width;
+            if (centerX < 35) {
+              x_level = 0
+              width = 34
+            } else if (centerX < 100) {
+              x_level = 34
+              width = 69
+            } else if (centerX < 150) {
+              x_level = 100
+              width = 48
+            } else if (centerX < 200) {
+              x_level = 150
+              width = 43
+            } else if (centerX < 260) {
+              x_level = 193
+              width = 70
+            } else {
+              x_level = 266
+              width = 34
+            }
+            ctx.rect(x_level, y_level, width, height);
+          } catch (e) {
+            alert(e)
+          }
         } else {
           ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
         }
@@ -1064,6 +1660,9 @@ function drawFields(name) {
         }
         if (shapeArr[4].toLowerCase() == 'true') {
           ctx.fillStyle = shapeArr[3];
+        }
+        if (drawType == 'rect') {
+          ctx.fillStyle = 'rgba(255, 165, 0, 0.2)'
         }
         ctx.stroke();
         if (shapeArr[4].toLowerCase() == 'true') {
@@ -1092,7 +1691,6 @@ function onFieldClick(event) {
   //Turns coordinates into a numeric box
   let box = ((Math.ceil(event.offsetY / target.height * resY) - 1) * resX) + Math.ceil(event.offsetX / target.width * resX);
   let coords = event.offsetX + "," + event.offsetY;
-
   let allowableResponses = document.getElementById("allowableResponses" + base).value;
 
   if(allowableResponses != "none"){
@@ -1241,7 +1839,6 @@ function onTeamnameChange(event) {
 
 /**
  * adds to the number in innerHTML of the value tag.
- *
  * @param {element} element the <div> tag element (parent to the value tag).
  * @param {number} step the amount to add to the value tag.
  */
@@ -1267,35 +1864,6 @@ function counter(element, step) {
   if (step >= 0 && cycleTimer != null) {
     document.getElementById("cycle_" + cycleTimer.value).click();
   }
-}
-
-function newCycle(event) {
-  let timerID = event.firstChild;
-  let base = getIdBase(timerID.id);
-  let inp = document.getElementById("input" + base)
-  let cycleTime = inp.value
-  inp.value = 0
-
-  if (cycleTime > 0) {
-    let cycleInput = document.getElementById("cycletime" + base);
-    let tempValue = Array.from(JSON.parse(cycleInput.value));
-    tempValue.push(cycleTime);
-    cycleInput.value = JSON.stringify(tempValue);
-    let d = document.getElementById("display" + base);
-    d.value = cycleInput.value.replace(/\"/g,'').replace(/\[/g, '').replace(/\]/g, '').replace(/,/g, ', ');
-  }
-}
-
-function undoCycle(event) {
-  let undoID = event.firstChild;
-  let uId = getIdBase(undoID.id);
-  //Getting rid of last value
-  let cycleInput = document.getElementById("cycletime" + uId);
-  let tempValue = Array.from(JSON.parse(cycleInput.value));
-  tempValue.pop();
-  cycleInput.value = JSON.stringify(tempValue);
-  let d = document.getElementById("display" + uId);
-  d.value = cycleInput.value.replace(/\"/g,'').replace(/\[/g, '').replace(/\]/g, '').replace(/,/g, ', ');
 }
 
 function resetTimer(event) {
@@ -1386,7 +1954,7 @@ function copyData(){
 
 window.onload = function () {
   let ret = configure();
-  if (ret != -1) {
+  if (ret !== -1) {
     let ece = document.getElementById("input_e");
     let ec = null;
     if (ece != null) {
