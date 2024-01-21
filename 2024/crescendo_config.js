@@ -1,6 +1,6 @@
 
-// TODO Bicycle StartCycle button + behind-the-scenes timekeeping
-// TODO Bicycle ShotFrom:clickable_image
+// TODO Bicycle behind-the-scenes-timekeeping
+// TODO Auton Bicycle source
 
 
 const config_data = `
@@ -81,14 +81,15 @@ const config_data = `
     ],
     "auton": [
         {
-            "name": "Leave Starting Zone",
+            "name": "Left Starting Zone",
             "code": "al",
             "type": "bool"
         },
         {
-            "name": "Notes",
-            "code": "an",
-            "type": "text"
+            "name": "Bicycle",
+            "code": "teleopbicycle",
+            "type": "bicycle",
+            "bicycle_id": "auton"
         }
     ],
     "teleop": [
@@ -111,11 +112,6 @@ const config_data = `
             "name": "Times Amplified by HP",
             "code": "tam",
             "type": "counter"
-        },
-        {
-            "name": "Cycle Timer",
-            "code": "ct",
-            "type": "timer"
         },
         {
             "name": "Bicycle",
@@ -207,19 +203,12 @@ const config_data = `
             "defaultValue": "a"
         },
         {
-            "name": "Goes under stage",
+            "name": "Fits Under Stage?",
             "code": "us",
             "type": "bool"
         },
         {
-            "name": "Comments",
-            "code": "co",
-            "type": "text",
-            "size": 15,
-            "maxSize": 100
-        },
-        {
-            "name": "RP",
+            "name": "Ranking Points",
             "code": "rp",
             "type": "text",
             "size": 1,
@@ -231,6 +220,13 @@ const config_data = `
             "type": "text",
             "size": 1,
             "maxSize": 3
+        },
+        {
+            "name": "Notes",
+            "code": "co",
+            "type": "text",
+            "size": 15,
+            "maxSize": 100
         }
     ]
 }`;

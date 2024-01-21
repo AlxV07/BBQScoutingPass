@@ -23,7 +23,7 @@ let options = {
 
 // Must be filled in: s=scouter, e=event,  l=level(q,qf,sf,f), m=match#, r=robot(r1,r2,b1..), t=team#
 // let requiredFields = ["s", "e", "m", "l", "r", "as"];  // requires auton start pos ("as")
-let requiredFields = ["s", "e", "m", "l", "r"];
+let requiredFields = []
 
 let cycles = []
 class Cycle {
@@ -40,7 +40,8 @@ class Cycle {
         ['amp_spe', 3]
   ])
 
-  constructor(source, shot_from, target, status, time) {
+  constructor(gametime, source, shot_from, target, status, time) {
+    this.gametime = gametime  // 0=auton, 1=teleop
     this.source = source;      // 0=hp_ground, 1=hp_other, 2=o.g.auton i.e. auton_leftover, 3=ground
     this.shot_from = shot_from;   // zone_id
     this.target = target;      // 0=partner, 1=amp, 2=speaker, 3=amplified_speaker
@@ -48,13 +49,14 @@ class Cycle {
     this.time = time;
   }
   condense() {
-    // sxytftime
+    // gsxytftime
+    // g = gametime (auton / teleop)
     // s = source
     // x, y = grid_x, grid_y
     // t = target
     // f = successful?
     // time = `sec[0:-1].sec[-1]`  // Removed precision point
-    return `${this.source}${this.shot_from}${this.target}${this.status}${this.time}`
+    return `${this.gametime}${this.source}${this.shot_from}${this.target}${this.status}${this.time}`
   }
 
   toString() {
@@ -62,17 +64,21 @@ class Cycle {
   }
 }
 
-function startCycle(code_identifier) {
-
-}
 
 function nextCycle(code_identifier) {
-  saveCycle(code_identifier)
+  let undefined_vars = saveCycle(code_identifier)
+  if (undefined_vars.length > 0) {  // More than 0 undefined vars
+    alert(`Missing fields in Cycle Form: ${undefined_vars.join(', ')}`)
+    return
+  }
   try {
     clearCycle(code_identifier)
   } catch (e) {
     alert(e)
   }
+  let break_component = document.getElementById(`break_${code_identifier}break`)
+  break_component.setAttribute("nof_cycles", (parseInt(break_component.getAttribute("nof_cycles"))+1).toString())
+  break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 }
 
 function saveCycle(code_identifier) {
@@ -90,16 +96,32 @@ function saveCycle(code_identifier) {
     let success = Form[`${code_identifier}success`]
     let success_value = success.checked ? 1 : 0;
 
+    let gametime = code_identifier.endsWith('a') ? 0 : 1
+
+    let undefined_vars = []
+    if (src_value == undefined) {
+      undefined_vars.push('\"Source\"')
+    }
+    if (shotfrom_value == undefined) {
+      undefined_vars.push('\"Shot From Region\"')
+    }
+    if (tar_value == undefined) {
+      undefined_vars.push('\"Target\"')
+    }
+    if (undefined_vars.length > 0) {
+      return undefined_vars
+    }
+
     let cycle = new Cycle(
+        gametime,
         src_value,
         shotfrom_value,
         tar_value,
         success_value,
-        9,
-        // document.getElementById('time_id thing').value,
+        null,
     )
     cycles.push(cycle)
-    alert(cycles)
+    return []
   } catch (e) {
     alert(e)
   }
@@ -112,11 +134,10 @@ function clearCycle(code_identifier) {
     code = e.id.substring(3)
     e.value = "[]"
   }
-
   inputs = new Set(document.querySelectorAll("[id*='input_']"));
   for (e of inputs) {
     code = e.id.substring(6)
-    if (!code.startsWith(bicycle_component_identifier)) {
+    if (!code.startsWith(code_identifier)) {
       continue
     }
     if (e.className == "clickableImage") {
@@ -130,7 +151,12 @@ function clearCycle(code_identifier) {
         e.checked = false
         document.getElementById("display_" + baseCode).value = ""
       }
-      let defaultValue = document.getElementById("default_" + baseCode).value
+      let defaultValue;
+      try {
+        defaultValue = document.getElementById("default_" + baseCode).value
+      } catch (p) {
+        defaultValue = ''
+      }
       if (defaultValue != "") {
         if (defaultValue == e.value) {
           e.checked = true
@@ -175,40 +201,6 @@ function clearCycle(code_identifier) {
   drawFields()
 }
 
-function addStartCycleButton(table, idx, name, data, code_identifier) {
-  let row = table.insertRow(idx);
-  let cell1 = row.insertCell(0);
-  cell1.classList.add("title");
-  if (!data.hasOwnProperty('code')) {
-    cell1.innerHTML = `Error: No code specified for ${name}`;
-    return idx + 1;
-  }
-  // let cell2 = row.insertCell(1);
-  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
-  // cell2.classList.add("field");
-  let inp = document.createElement("input");
-  inp.setAttribute("id", "input_" + data.code);
-  inp.setAttribute("type", "button");
-  inp.setAttribute("onclick", `startCycle(\"${code_identifier}\")`)
-  inp.setAttribute("value", "Start Cycle")
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
-  if (data.hasOwnProperty('defaultValue')) {
-    inp.setAttribute("value", data.defaultValue);
-  }
-  if (data.hasOwnProperty('disabled')) {
-    inp.setAttribute("disabled", "");
-  }
-  cell1.appendChild(inp);
-  return idx + 1;
-}
-
 function addNextCycleButton(table, idx, name, data, code_identifier) {
   let row = table.insertRow(idx);
   let cell1 = row.insertCell(0);
@@ -245,6 +237,7 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
 
 bicycle_component_identifier = 'cycle'
 
+// Add bicycle
 function addBicycle(table, idx, name, data) {
   let code_identifier;
   if (data.bicycle_id == 'auton') {
@@ -253,26 +246,39 @@ function addBicycle(table, idx, name, data) {
     code_identifier = bicycle_component_identifier + 't';
   }
 
-  let start_button_data = JSON.parse(`
-  { 
-    "name": "Start Cycle:",
-    "code": "${code_identifier}startc",
-    "type": "startCycleButton"
-  }`)
-  idx = addStartCycleButton(table, idx, start_button_data.name, start_button_data, code_identifier)
+  let break_data = JSON.parse(`{
+            "name": "Cycle Form:",
+            "code": "${code_identifier}break",
+            "type": "break"
+        }`)
+  idx = addBreak(table, idx, break_data.name, break_data)
 
-  let source_data = JSON.parse(`{ 
-   "name": "Source",
-   "code": "${code_identifier}src",
-   "type": "radio",
-   "choices": {
-    "hpg": "HP Ground<br>",
-    "hpo": "HP (other)<br>",
-    "oga": "O.G. Auton<br>",
-    "g": "Ground"
-   },
-   "defaultValue": "hpg"
-   }`)
+  let source_data;
+  if (code_identifier == bicycle_component_identifier + 'a') { // Auton
+    source_data = JSON.parse(`{ 
+     "name": "Source",
+     "code": "${code_identifier}src",
+     "type": "radio",
+     "choices": {
+      "hpg": "HP Ground<br>",
+      "hpo": "HP (other)<br>",
+      "oga": "O.G. Auton<br>",
+      "g": "Ground"
+     }
+     }`)
+  } else {  // Teleop intake
+    source_data = JSON.parse(`{ 
+     "name": "Source",
+     "code": "${code_identifier}src",
+     "type": "radio",
+     "choices": {
+      "hpg": "HP Ground<br>",
+      "hpo": "HP (other)<br>",
+      "oga": "O.G. Auton<br>",
+      "g": "Ground"
+     }
+     }`)
+  }
   idx = addRadio(table, idx, source_data.name, source_data) // Source
 
   let shot_from_data = JSON.parse(`{
@@ -295,8 +301,7 @@ function addBicycle(table, idx, name, data) {
     "amp": "Amp<br>",
     "spe": "Speaker<br>",
     "amp_spe": "Amplified Speaker"
-   },
-   "defaultValue": "par"
+   }
   }`)
   idx = addRadio(table, idx, target_data.name, target_data)  // Target
 
@@ -1019,13 +1024,31 @@ function addText(table, idx, name, data) {
     inp.setAttribute("disabled", "");
   }
   cell2.appendChild(inp);
-
   if (data.hasOwnProperty('defaultValue')) {
     var def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
     cell2.appendChild(def);
+  }
+  return idx + 1
+}
+
+function addBreak(table, idx, name, data) {
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.classList.add("title");
+  cell1.setAttribute('id', 'break_' + data.code)
+  cell1.setAttribute('nof_cycles', '0')
+  cell1.style.fontWeight = 'bold'
+  cell1.style.fontSize = 'larger'
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  cell1.innerHTML = `Cycle Form (${cell1.getAttribute("nof_cycles")}):` + '&nbsp;';
+  if (data.hasOwnProperty('tooltip')) {
+    cell1.setAttribute("title", data.tooltip);
   }
   return idx + 1
 }
@@ -1212,6 +1235,8 @@ function addElement(table, idx, data) {
     idx = addCounter(table, idx, name, data);
   } else if (data.type == 'bicycle') {
     idx = addBicycle(table, idx, name, data)
+  } else if (data.type == 'break') {
+    idx = addBreak(table, idx, name, data)
   } else if ((data.type == 'scouter') || (data.type == 'event') || (data.type == 'text')) {
     idx = addText(table, idx, name, data);
   } else if ((data.type == 'level') || (data.type == 'radio') || (data.type == 'robot')) {
@@ -1420,12 +1445,12 @@ function getData(dataFormat) {
     Array.from(fd.keys()).forEach(thisKey => {
       str.push(thisKey + "=" + fd.get(thisKey))
     });
-    return str.join(";")
-  } else if (dataFormat == "tsv") {
-    Array.from(fd.keys()).forEach(thisKey => {
-      str.push(fd.get(thisKey))
-    });
-    return str.join(";")
+    return str.join(";") + `;[${cycles.join(',')}]`
+  // } else if (dataFormat == "tsv") {
+  //   Array.from(fd.keys()).forEach(thisKey => {
+  //     str.push(fd.get(thisKey))
+  //   });
+  //   return str.join(";")
   } else {
     return "unsupported dataFormat"
   }
@@ -1483,80 +1508,104 @@ function clearForm() {
     resetRobot()
   }
 
-  // Clear XY coordinates
-  inputs = document.querySelectorAll("[id*='XY_']");
-  for (e of inputs) {
-    code = e.id.substring(3)
-    e.value = "[]"
-  }
-
-  inputs = document.querySelectorAll("[id*='input_']");
-  for (e of inputs) {
-    code = e.id.substring(6)
-
-    // Don't clear key fields
-    if (code == "m") continue
-    if (code.substring(0, 2) == "r_") continue
-    if (code.substring(0, 2) == "l_") continue
-    if (code == "e") continue
-    if (code == "s") continue
-
-    if (e.className == "clickableImage") {
-      e.value = "[]";
-      continue;
+  try {
+    // Clear XY coordinates
+    inputs = document.querySelectorAll("[id*='XY_']");
+    for (e of inputs) {
+      code = e.id.substring(3)
+      e.value = "[]"
     }
 
-    let radio = code.indexOf("_")
-    if (radio > -1) {
-      let baseCode = code.substr(0, radio)
-      if (e.checked) {
-        e.checked = false
-        document.getElementById("display_" + baseCode).value = ""
+    inputs = document.querySelectorAll("[id*='input_']");
+    for (e of inputs) {
+      code = e.id.substring(6)
+
+      // Don't clear key fields
+      if (code == "m") continue
+      if (code.substring(0, 2) == "r_") continue
+      if (code.substring(0, 2) == "l_") continue
+      if (code == "e") continue
+      if (code == "s") continue
+
+      if (e.className == "clickableImage") {
+        e.value = "[]";
+        continue;
       }
-      let defaultValue = document.getElementById("default_" + baseCode).value
-      if (defaultValue != "") {
-        if (defaultValue == e.value) {
-          e.checked = true
-          document.getElementById("display_" + baseCode).value = defaultValue
-        }
-      }
-    } else {
-      if (e.type == "number" || e.type == "text" || e.type == "hidden") {
-        if ((e.className == "counter") ||
-            (e.className == "timer") ||
-            (e.className == "cycle")) {
-          e.value = 0
-          if (e.className == "timer" || e.className == "cycle") {
-            // Stop interval
-            let timerStatus = document.getElementById("status_" + code);
-            let startButton = document.getElementById("start_" + code);
-            let intervalIdField = document.getElementById("intervalId_" + code);
-            let intervalId = intervalIdField.value;
-            timerStatus.value = 'stopped';
-            startButton.innerHTML = "Start";
-            if (intervalId != '') {
-              clearInterval(intervalId);
-            }
-            intervalIdField.value = '';
-            if (e.className == "cycle") {
-              document.getElementById("cycletime_" + code).value = "[]"
-              document.getElementById("display_" + code).value = ""
-            }
-          }
-        } else {
-          e.value = ""
-        }
-      } else if (e.type == "checkbox") {
-        if (e.checked == true) {
+
+      let radio = code.indexOf("_")
+      if (radio > -1) {
+        let baseCode = code.substr(0, radio)
+        if (e.checked) {
           e.checked = false
+          document.getElementById("display_" + baseCode).value = ""
+        }
+        let defaultValue;
+        try {
+          defaultValue = document.getElementById("default_" + baseCode).value
+        } catch (p) {
+          defaultValue = ''
+        }
+        if (defaultValue != "") {
+          if (defaultValue == e.value) {
+            e.checked = true
+            document.getElementById("display_" + baseCode).value = defaultValue
+          }
         }
       } else {
-        console.log("unsupported input type")
+        if (e.type == "number" || e.type == "text" || e.type == "hidden") {
+          if ((e.className == "counter") ||
+              (e.className == "timer") ||
+              (e.className == "cycle")) {
+            e.value = 0
+            if (e.className == "timer" || e.className == "cycle") {
+              // Stop interval
+              let timerStatus = document.getElementById("status_" + code);
+              let startButton = document.getElementById("start_" + code);
+              let intervalIdField = document.getElementById("intervalId_" + code);
+              let intervalId = intervalIdField.value;
+              timerStatus.value = 'stopped';
+              startButton.innerHTML = "Start";
+              if (intervalId != '') {
+                clearInterval(intervalId);
+              }
+              intervalIdField.value = '';
+              if (e.className == "cycle") {
+                document.getElementById("cycletime_" + code).value = "[]"
+                document.getElementById("display_" + code).value = ""
+              }
+            }
+          } else {
+            e.value = ""
+          }
+        } else if (e.type == "checkbox") {
+          if (e.checked == true) {
+            e.checked = false
+          }
+        } else {
+          console.log("unsupported input type")
+        }
       }
     }
+    cycles = []
+
+    let auton_specifier = bicycle_component_identifier + 'a'
+    let teleop_specifier = bicycle_component_identifier + 't'
+
+    let break_component;
+    break_component = document.getElementById(`break_${auton_specifier}break`)
+    break_component.setAttribute("nof_cycles", "0")
+    break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+
+    break_component = document.getElementById(`break_${teleop_specifier}break`)
+    break_component.setAttribute("nof_cycles", "0")
+    break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+
+    clearCycle(auton_specifier)
+    clearCycle(teleop_specifier)
+    drawFields()
+  } catch (e) {
+    alert(e)
   }
-  cycles = []
-  drawFields()
 }
 
 function startTouch(e) {
