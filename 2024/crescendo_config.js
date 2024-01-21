@@ -1,5 +1,4 @@
 
-// TODO Bicycle behind-the-scenes-timekeeping
 // TODO Auton Bicycle source
 
 

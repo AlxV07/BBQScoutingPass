@@ -25,7 +25,9 @@ let options = {
 // let requiredFields = ["s", "e", "m", "l", "r", "as"];  // requires auton start pos ("as")
 let requiredFields = []
 
+let prev_cycle_end_time = null
 let cycles = []
+
 class Cycle {
   static src_condense_map = new Map([
       ['hpg', 0],
@@ -55,7 +57,7 @@ class Cycle {
     // x, y = grid_x, grid_y
     // t = target
     // f = successful?
-    // time = `sec[0:-1].sec[-1]`  // Removed precision point
+    // time = {x}y.z
     return `${this.gametime}${this.source}${this.shot_from}${this.target}${this.status}${this.time}`
   }
 
@@ -63,7 +65,6 @@ class Cycle {
     return this.condense()
   }
 }
-
 
 function nextCycle(code_identifier) {
   let undefined_vars = saveCycle(code_identifier)
@@ -78,6 +79,7 @@ function nextCycle(code_identifier) {
   }
   let break_component = document.getElementById(`break_${code_identifier}break`)
   break_component.setAttribute("nof_cycles", (parseInt(break_component.getAttribute("nof_cycles"))+1).toString())
+  break_component.setAttribute("prev_cycle_end_time", Date.now().toString())
   break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 }
 
@@ -112,13 +114,21 @@ function saveCycle(code_identifier) {
       return undefined_vars
     }
 
+    let break_component = document.getElementById(`break_${code_identifier}break`)
+    let prev_cycle_end_time;
+    if (break_component.hasAttribute("prev_cycle_end_time")) {
+      prev_cycle_end_time = parseInt(break_component.getAttribute("prev_cycle_end_time"))
+    } else {
+      prev_cycle_end_time = 0
+    }
+
     let cycle = new Cycle(
         gametime,
         src_value,
         shotfrom_value,
         tar_value,
         success_value,
-        null,
+        prev_cycle_end_time == 0 ? 0.0 : ((Date.now() - prev_cycle_end_time) / 1000).toFixed(1),
     )
     cycles.push(cycle)
     return []
@@ -1595,9 +1605,15 @@ function clearForm() {
     break_component = document.getElementById(`break_${auton_specifier}break`)
     break_component.setAttribute("nof_cycles", "0")
     break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+    if (break_component.hasAttribute("prev_cycle_end_time")) {
+      break_component.removeAttribute("prev_cycle_end_time")
+    }
 
     break_component = document.getElementById(`break_${teleop_specifier}break`)
     break_component.setAttribute("nof_cycles", "0")
+    if (break_component.hasAttribute("prev_cycle_end_time")) {
+      break_component.removeAttribute("prev_cycle_end_time")
+    }
     break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 
     clearCycle(auton_specifier)
