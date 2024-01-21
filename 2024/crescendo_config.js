@@ -78,17 +78,28 @@ const config_data = `
       "code": "al",
       "type": "bool"
     },
-    { "name": "Amp Scores",
-      "code": "aas",
-      "type": "counter"
-    },
-    { "name": "Speaker Scores",
-      "code": "ass",
-      "type": "counter"
+    { "name": "Notes",
+      "code": "an",
+      "type": "text"
     }
   ],
   
   "teleop": [
+    { "name": "Was Defended",
+      "code": "wd",
+      "type": "bool"
+    },
+    { "name": "Failed Collections",
+      "code": "fc",
+      "type": "counter"
+    },
+    { "name": "Coop Bonus",
+      "code": "cp",
+      "type": "bool"
+    },
+    { "name": "Times Amplified by HP",
+      "code": "tam",
+      "type": "counter"
     { "name": "Cycle Timer",
       "code": "ct",
       "type": "timer"
@@ -102,7 +113,7 @@ const config_data = `
   
   "endgame": [
     { "name": "Stage Timer",
-      "code": "dt",
+      "code": "st",
       "type": "timer"
     },
     { "name": "Final Status",
@@ -112,28 +123,39 @@ const config_data = `
         "p": "Parked<br>",
         "o": "Onstage<br>",
         "s": "Onstage (Spotlit)<br>",
-        "h": "Harmony<br>",
-        "a": "Attempted but failed<br>",
-        "x": "Not attempted"
+        "x": "NOOB"
       },
       "defaultValue": "x"
     },
-    { "name": "Note in Trap",
-      "code": "nit",
-      "type": "bool"
+    { "name": "Trap",
+      "code": "ts",
+      "type": "counter"
+    },
+    { "name": "Failed Trap",
+      "code": "ft",
+      "type": "counter"
+    },
+    { "name": "Harmony",
+      "code": "ha",
+      "type": "counter"
     }
   ],
   "postmatch": [
-    { "name": "Driver Skill",
-      "code": "ds",
-      "type": "radio",
-      "choices": {
-        "n": "Not Effective<br>",
-        "a": "Average<br>",
-        "v": "Very Effective<br>",
-        "x": "Not Observed"
-      },
-      "defaultValue": "x"
+    { "name": "Was Fouled",
+      "code": "wf",
+      "type": "bool"
+    },
+    { "name": "Fouls",
+      "code": "fo",
+      "type": "counter"
+    },
+    { "name": "High Notes",
+      "code": "hn",
+      "type": "counter"
+    },
+    { "name": "Failed High Notes",
+      "code": "fhn",
+      "type": "counter"
     },
     { "name": "Defense Rating",
       "code": "dr",
@@ -147,40 +169,40 @@ const config_data = `
       },
       "defaultValue": "x"
     },
-    { "name": "Speed Rating",
-      "code": "sr",
+    { "name": "Tippy-ness<br>(5 = died/tipped)",
+      "code": "tip",
       "type": "radio",
       "choices": {
-        "1": "1 (slow)<br>",
-        "2": "2<br>",
-        "3": "3<br>",
-        "4": "4<br>",
-        "5": "5 (fast)"
+        "a": "0 ",
+        "b": "1 ",
+        "c": "2 ",
+        "d": "3 ",
+        "e": "4 ",
+        "f": "5 "
       },
-      "defaultValue":"3"
+      "defaultValue": "a"
     },
-    { "name": "Died/Immobilized",
-      "code": "die",
-      "type": "bool"
-    },
-    { "name": "Tippy<br>(almost tipped over)",
-      "code": "tip",
-      "type": "bool"
-    },
-    { "name": "Dropped Notes (>2)",
-      "code": "dn",
-      "type": "bool"
-    },
-    { "name": "Make good<br>alliance partner?",
-      "tooltip": "Would you want this robot on your alliance in eliminations?",
-      "code": "all",
+    { "name": "Goes under stage",
+      "code": "us",
       "type": "bool"
     },
     { "name": "Comments",
       "code": "co",
       "type": "text",
       "size": 15,
-      "maxSize": 55
+      "maxSize": 100
+    },
+    { "name": "RP",
+      "code": "rp",
+      "type": "text",
+      "size": 1,
+      "maxSize": 1
+    },
+    { "name": "Final Match Score",
+      "code": "fms",
+      "type": "text",
+      "size": 1,
+      "maxSize": 3
     }
   ]
 }`;
