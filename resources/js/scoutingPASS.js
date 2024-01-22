@@ -45,6 +45,7 @@ class Cycle {
       ["r3","j"],
       ["c4","k"],
       ["c5","l"],
+      ['pl', "k"] // preload
   ])
   static target_condense_map = new Map([
         ['par', 0],
@@ -267,8 +268,15 @@ function addBicycle(table, idx, name, data) {
     code_identifier = bicycle_component_identifier + 't';
   }
 
+  let break_name;
+  if (code_identifier == bicycle_component_identifier + 'a') {
+     break_name = 'Auton'
+  } else {
+    break_name = 'Teleop'
+  }
+
   let break_data = JSON.parse(`{
-            "name": "Cycle Form:",
+            "name": "${break_name} Cycle Form:",
             "code": "${code_identifier}break",
             "type": "break"
         }`)
@@ -281,6 +289,7 @@ function addBicycle(table, idx, name, data) {
      "code": "${code_identifier}src",
      "type": "radio",
      "choices": {
+      "pl": "Preload<br>",
       "b1": "B1",
       "b2": "B2",
       "b3": "B3<br>",
@@ -1069,12 +1078,12 @@ function addBreak(table, idx, name, data) {
   cell1.setAttribute('id', 'break_' + data.code)
   cell1.setAttribute('nof_cycles', '0')
   cell1.style.fontWeight = 'bold'
-  cell1.style.fontSize = 'larger'
+  cell1.style.fontSize = 'large'
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  cell1.innerHTML = `Cycle Form (${cell1.getAttribute("nof_cycles")}):` + '&nbsp;';
+  cell1.innerHTML = `${name} (${cell1.getAttribute("nof_cycles")}):` + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }

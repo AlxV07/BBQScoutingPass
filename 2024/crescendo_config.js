@@ -81,6 +81,13 @@ const config_data = `
             "type": "bool"
         },
         {
+            "name": "Auton Notes",
+            "code": "an",
+            "type": "text",
+            "size": 15,
+            "maxSize": 100
+        },
+        {
             "name": "Bicycle",
             "code": "teleopbicycle",
             "type": "bicycle",
