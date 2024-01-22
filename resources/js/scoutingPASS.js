@@ -271,16 +271,16 @@ function addBicycle(table, idx, name, data) {
      "type": "radio",
      "choices": {
       "b1": "B1",
-      "c1": "C1",
-      "r1": "R1<br>",
       "b2": "B2",
+      "b3": "B3<br>",
+      "c1": "C1",
       "c2": "C2",
-      "r2": "R2<br>",
-      "b3": "B3",
       "c3": "C3",
-      "r3": "R3<br>",
-      "c4": "C4<br>",
-      "c5": "C5"
+      "c4": "C4",
+      "c5": "C5<br>",
+      "r1": "R1",
+      "r2": "R2",
+      "r3": "R3"
      }
      }`)
   } else {  // Teleop intake
