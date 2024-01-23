@@ -128,8 +128,12 @@ h2{
 }
 
 table {
+    display: flex;
     border: 1px solid black;
     width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
 }
 
 td {
