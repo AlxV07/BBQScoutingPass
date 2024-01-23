@@ -55,7 +55,7 @@ class Cycle {
   ])
 
   constructor(gametime, source, shot_from, target, status, time) {
-    this.gametime = gametime  // 0=auton, 1=teleop
+    this.gametime = gametime  // 1=auton, 2=teleop
     this.source = source;      // 0=hp_ground, 1=hp_other, 2=o.g.auton i.e. auton_leftover, 3=ground
     this.shot_from = shot_from;   // zone_id
     this.target = target;      // 0=partner, 1=amp, 2=speaker, 3=amplified_speaker
@@ -110,7 +110,7 @@ function saveCycle(code_identifier) {
     let success = Form[`${code_identifier}success`]
     let success_value = success.checked ? 1 : 0;
 
-    let gametime = code_identifier.endsWith('a') ? 0 : 1
+    let gametime = code_identifier.endsWith('a') ? 1 : 2
 
     let undefined_vars = []
     if (src_value == undefined) {
