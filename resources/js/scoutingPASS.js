@@ -79,9 +79,16 @@ class Cycle {
 }
 
 function nextCycle(code_identifier) {
+  let cycleText;
+  if (code_identifier.endsWith('a')) {
+    cycleText = 'Auton'
+  } else {
+    cycleText = 'Teleop'
+  }
+
   let undefined_vars = saveCycle(code_identifier)
   if (undefined_vars.length > 0) {  // More than 0 undefined vars
-    alert(`Missing fields in Cycle Form: ${undefined_vars.join(', ')}`)
+    alert(`Missing fields in ${cycleText} Cycle Form: ${undefined_vars.join(', ')}`)
     return
   }
   try {
@@ -92,7 +99,7 @@ function nextCycle(code_identifier) {
   let break_component = document.getElementById(`break_${code_identifier}break`)
   break_component.setAttribute("nof_cycles", (parseInt(break_component.getAttribute("nof_cycles"))+1).toString())
   break_component.setAttribute("prev_cycle_end_time", Date.now().toString())
-  break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+  break_component.innerHTML = `${cycleText} Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 }
 
 function saveCycle(code_identifier) {
@@ -1631,7 +1638,7 @@ function clearForm() {
     let break_component;
     break_component = document.getElementById(`break_${auton_specifier}break`)
     break_component.setAttribute("nof_cycles", "0")
-    break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+    break_component.innerHTML = `Auton Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
     if (break_component.hasAttribute("prev_cycle_end_time")) {
       break_component.removeAttribute("prev_cycle_end_time")
     }
@@ -1641,7 +1648,7 @@ function clearForm() {
     if (break_component.hasAttribute("prev_cycle_end_time")) {
       break_component.removeAttribute("prev_cycle_end_time")
     }
-    break_component.innerHTML = `Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+    break_component.innerHTML = `Teleop Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 
     clearCycle(auton_specifier)
     clearCycle(teleop_specifier)
