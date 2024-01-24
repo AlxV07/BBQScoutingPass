@@ -57,7 +57,7 @@ class Cycle {
   constructor(gametime, source, shot_from, target, status, time) {
     this.gametime = gametime  // 1=auton, 2=teleop
     this.source = source;      // 0=hp_ground, 1=hp_other, 2=o.g.auton i.e. auton_leftover, 3=ground
-    this.shot_from = shot_from;   // zone_id
+    this.shot_from = shot_from;   // zone_id {xy} format
     this.target = target;      // 0=partner, 1=amp, 2=speaker, 3=amplified_speaker
     this.status = status;      // 0=unsuccessful, 1=successful
     this.time = time;
@@ -1443,7 +1443,7 @@ function getData(dataFormat) {
   let Form = document.forms.scoutingForm;
   let UniqueFieldNames = [];
   let fd = new FormData();
-  let str = [];
+  let strArray = [];
 
   let checkedChar;
   let uncheckedChar;
@@ -1487,10 +1487,36 @@ function getData(dataFormat) {
 
   if (dataFormat == "kvs") {
     Array.from(fd.keys()).forEach(thisKey => {
-      str.push(thisKey + "=" + fd.get(thisKey))
+      strArray.push(thisKey + "=" + fd.get(thisKey))
     });
-    return str.join(";") + `;[${cycles.join(',')}]`
-  // } else if (dataFormat == "tsv") {
+    // try {
+      let gametimes = []
+      let sources = []
+      /* Zone id chart
+      | 0 | 1 | 2 | 3 | 4 | 5 |
+      | 6 | 7 | 8 | 9 | 10| 11|
+       */
+      let zone_ids = []
+      let targets = []
+      let statuses = []
+      let times = []
+      for (let i = 0; i < cycles.length; i++) {
+        let cycle = cycles[i]
+        gametimes.push(cycle.gametime)
+        sources.push(cycle.source)
+        zone_ids.push(parseInt(cycle.shot_from.substring(0, 1)) + (parseInt(cycle.shot_from.substring(1, 2)) * 6)) // X + Y
+        targets.push(cycle.target)
+        statuses.push(cycle.status)
+        times.push(cycle.time)
+      }
+    // } catch (e) {
+    //   alert(e)
+    // }
+    // normal_data;gametimes;sources;zone_ids;targets;statuses;times
+    //            |-> cycle data, in array format, delimiter = comma
+    return `${strArray.join(";")};gat=[${gametimes.join(',')}];src=[${sources.join(',')}];zis=[${zone_ids.join(',')}];tar=[${targets.join(',')}];sts=[${statuses.join(',')}];tim=[${times.join(',')}]`
+
+  //} else if (dataFormat == "tsv") {
   //   Array.from(fd.keys()).forEach(thisKey => {
   //     str.push(fd.get(thisKey))
   //   });
