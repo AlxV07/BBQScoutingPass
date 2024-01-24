@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'Alx';
+    font-style: normal;
+    font-weight: normal;
+    src: url("../fonts/SourceCodePro-VariableFont_wght.ttf") format('truetype');
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transition: 2s ease;
+}
+
+#prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
+    font-family: Alx;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border-width: 4px;
+}
+
+.title {
+    text-align: right;
+}
+.field {
+    text-align: left;
+}
+.field-image {
+    margin: 2vw;
+}
+.field-image-src{
+    background-position: center;
+    border: 1px solid;
+}
+.button {
+    font-family: Alx;
+    font-size: 16px;
+    transition: 2s ease;
+}
+.match-label{
+    text-align: center;
+}
+
+.half-button-l{
+    width: 48%;
+    margin: 1vw;
+    height: 100%;
+}
+.half-button-r{
+    flex-grow: 1;
+    height: 100%;
+    width: 48%;
+    margin: 1vw;
+}
+.half-button-container{
+    display: flex;
+}
+.main-panel{
+    display: none;
+    height: 100%;
+    min-height: 100%;
+    width: 100vw;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family : Alx;
+    text-align: justify;
+}
+
+#prematch{
+    display: table;
+}
+
+#prematchHeader1, #prematchHeader2,
+#autonHeader, #endgameHeader, #teleopHeader1, #teleopHeader2, #postmatchHeader {
+    border-width: 4px;
+}
+#qrHeader1, #qrHeader2 {
+}
+
+h1{
+    font-family: Alx;
+    text-align: center;
+    border-style: groove;
+    border-width: 2px;
+    font-size: 40px;
+    padding: 10px;
+    font-weight: 350;
+}
+
+h2{
+    font-family: Alx;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 300;
+}
+
+#nextButton1, #nextButton2, #nextButton3, #nextButton4, #nextButton5, #nextButton6, #nextButton7, #nextButton8, #nextButton9, #nextButton10,
+.clearForm, .submitForm, #displayButton, #copyButton,
+.undoButton, .flipButton {
+    font-family: Alx;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+#prevButton1, #prevButton2, #prevButton3, #prevButton4, #prevButton5, #prevButton6, #prevButton7, #prevButton8, #prevButton9 {
+    font-family: Alx;
+    padding: 10px;
+}
+
+table {
+    display: flex;
+    border: 1px solid;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+td {
+    padding: 10px 4px;
+}
+
+input {
+    font-size: 16px;
+    transition: 2s ease;
+}
+input[type='radio']:checked:after {
+    width: 9px;
+    height: 9px;
+    border-radius: 9px;
+    position: relative;
+    display: inline-block;
+    visibility: visible;
+    content: '';
+}
+
+#qr-table {
+    text-align: center;
+}
+#qr-code{
+    text-align: center;
+}
