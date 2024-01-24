@@ -30,22 +30,22 @@ let cycles = []
 
 class Cycle {
   static src_condense_map = new Map([
-      ['hpg', 0],
-      ['hpo', 1],
-      ['oga', 2],
-      ['g', 3],
+      ['hpg', 1],
+      ['hpo', 2],
+      ['oga', 3],
+      ['g', 4],
       ["b1","a"],
-      ["c1","b"],
-      ["r1","c"],
-      ["b2","d"],
+      ["c1","d"],
+      ["r1","i"],
+      ["b2","b"],
       ["c2","e"],
-      ["r2","f"],
-      ["b3","g"],
-      ["c3","h"],
-      ["r3","j"],
-      ["c4","k"],
-      ["c5","l"],
-      ['pl', "k"] // preload
+      ["r2","j"],
+      ["b3","c"],
+      ["c3","f"],
+      ["r3","k"],
+      ["c4","g"],
+      ["c5","h"],
+      ['pl', "p"] // preload
   ])
   static target_condense_map = new Map([
         ['par', 0],
