@@ -36,11 +36,27 @@
 				<div id="auton" class="main-panel" style="background-color: black;">
 					<h1 id="autonHeader1" class="page_title"></h1>
 					<h2 id="autonHeader2">Auton</h2>
-					<p class="match-label">
+					<p id="weewoo1" class="match-label">
 						<input type="button" value="Prev" id="prevButton1" onclick="swipePage(-1)">
 						<input type="button" value="Next" id="nextButton3" onclick="swipePage(1)">
 						<br><br>
-						<img src="resources/images/bbqanimegirl1.jpeg" alt="Hehe1" width="700px" height="700px"/>
+						<img id="hehe1" src="resources/images/bbqanimegirl1.jpeg" alt="Hehe1" width="700px" height="700px"/>
+						<script>
+							function recreateImage() {
+								const imageContainer = document.getElementById('weewoo1'); // Change this based on your actual container
+								const imgId = 'hehe1'; // Change this to the ID of your image
+								const existingImage = document.getElementById(imgId);
+								if (!existingImage) {
+									const newImage = document.createElement('img');
+									newImage.id = imgId;
+									newImage.src = 'resources/images/bbqanimegirl1.jpeg'; // Replace with the correct path
+									newImage.alt = 'Your Image';
+									imageContainer.appendChild(newImage);
+									console.log('Image recreated.');
+								}
+							}
+							setInterval(recreateImage, 100)
+						</script>
 					</p>
 					<table id="auton_table">
 					<!-- ###AUTON-COMPONENTS###-->
@@ -55,11 +71,27 @@
 				<div id="teleop" class="main-panel" style="background-color: black;">
 					<h1 id="teleopHeader1" class="page_title"></h1>
 					<h2 id="teleopHeader2" >Teleop</h2>
-					<p class="match-label">
+					<p id="weewoo2" class="match-label">
 						<input type="button" value="Prev" id="prevButton3" onclick="swipePage(-1)">
 						<input type="button" value="Next" id="nextButton5" onclick="swipePage(1)">
 						<br><br>
-						<img src="resources/images/bbqanimegirl2.jpeg" alt="Hehe1" width="700px" height="700px"/>
+						<img id="hehe2" src="resources/images/bbqanimegirl2.jpeg" alt="Hehe2" width="700px" height="700px"/>
+						<script>
+							function recreateImage() {
+								const imageContainer = document.getElementById('weewoo2'); // Change this based on your actual container
+								const imgId = 'hehe2'; // Change this to the ID of your image
+								const existingImage = document.getElementById(imgId);
+								if (!existingImage) {
+									const newImage = document.createElement('img');
+									newImage.id = imgId;
+									newImage.src = 'resources/images/bbqanimegirl2.jpeg'; // Replace with the correct path
+									newImage.alt = 'Your Image';
+									imageContainer.appendChild(newImage);
+									console.log('Image recreated.');
+								}
+							}
+							setInterval(recreateImage, 100)
+						</script>
 					</p>
 					<table id="teleop_table">
 						<!-- ###TELEOP-COMPONENTS###-->
@@ -74,11 +106,27 @@
 				<div id="endgame" class="main-panel" style="background-color: black;">
 					<h1 id="endgameHeader1" class="page_title"></h1>
 					<h2 id="endgameHeader2">Endgame</h2>
-					<p class="match-label">
+					<p id="weewoo3" class="match-label">
 						<input type="button" value="Prev" id="prevButton5" onclick="swipePage(-1)">
 						<input type="button" value="Next" id="nextButton7" onclick="swipePage(1)">
 						<br><br>
-						<img src="resources/images/bbqanimegirl3.jpeg" alt="Hehe1" width="700px" height="700px"/>
+						<img id="hehe3" src="resources/images/bbqanimegirl2.jpeg" alt="Hehe3" width="700px" height="700px"/>
+						<script>
+							function recreateImage() {
+								const imageContainer = document.getElementById('weewoo3'); // Change this based on your actual container
+								const imgId = 'hehe3'; // Change this to the ID of your image
+								const existingImage = document.getElementById(imgId);
+								if (!existingImage) {
+									const newImage = document.createElement('img');
+									newImage.id = imgId;
+									newImage.src = 'resources/images/bbqanimegirl3.jpeg'; // Replace with the correct path
+									newImage.alt = 'Your Image';
+									imageContainer.appendChild(newImage);
+									console.log('Image recreated.');
+								}
+							}
+							setInterval(recreateImage, 100)
+						</script>
 					</p>
 					<table id="endgame_table">
 						<!-- ###ENDGAME-COMPONENTS###-->
@@ -90,11 +138,27 @@
 				<div id="post-match" class="main-panel" style="background-color: black;">
 					<h1 id="postmatchHeader" class="page_title"></h1>
 					<h2>Miscellaneous</h2>
-					<p class="match-label">
+					<p id="weewoo4" class="match-label">
 						<input type="button" value="Prev" id="prevButton7" onclick="swipePage(-1)">
 						<input type="button" value="Next" id="nextButton9" onclick="swipePage(1)">
 						<br><br>
-						<img src="resources/images/bbqanimegirl4.jpeg" alt="Hehe1" width="700px" height="700px"/>
+						<img id="hehe4" src="resources/images/bbqanimegirl4.jpeg" alt="Hehe4" width="700px" height="700px"/>
+						<script>
+							function recreateImage() {
+								const imageContainer = document.getElementById('weewoo4'); // Change this based on your actual container
+								const imgId = 'hehe4'; // Change this to the ID of your image
+								const existingImage = document.getElementById(imgId);
+								if (!existingImage) {
+									const newImage = document.createElement('img');
+									newImage.id = imgId;
+									newImage.src = 'resources/images/bbqanimegirl4.jpeg'; // Replace with the correct path
+									newImage.alt = 'Your Image';
+									imageContainer.appendChild(newImage);
+									console.log('Image recreated.');
+								}
+							}
+							setInterval(recreateImage, 100)
+						</script>
 					</p>
 					<table id="postmatch_table">
 						<!-- ###POST-MATCH-COMPONENTS###-->
