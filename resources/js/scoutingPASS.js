@@ -409,6 +409,7 @@ function onShotFromClicked(event) {
     } else {
       x_level = 5
     }
+
     shotfrom_component = document.getElementById('canvas' + base)
     shotfrom_component.setAttribute('grid_coords', `${x_level}${y_level}`)
 
@@ -1479,6 +1480,16 @@ function getData(dataFormat) {
     let thisFieldValue;
     if (thisField.type == 'checkbox') {
       thisFieldValue = thisField.checked ? checkedChar : uncheckedChar;
+    } else if (fieldname == 'as') {
+      let field = document.getElementById('canvas_' + 'as')
+      let field_value = field.getAttribute('grid_coords')
+      /*
+      0   4
+      1   5
+      2   6
+      3   7
+       */
+      thisFieldValue = (parseInt(field_value.substring(0, 1)) * 4) + parseInt(field_value.substring(1, 2))
     } else {
       thisFieldValue = thisField.value ? thisField.value.replace(/"/g, '').replace(/;/g, "-") : "";
     }
@@ -1743,8 +1754,26 @@ function drawFields(name) {
         let radius = 5;
         ctx.beginPath();
         let drawType = shapeArr[0].toLowerCase()
-        if (drawType == 'circle') {
-          ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);
+        if (drawType == 'circle') {  // Should only be for auton start pos {Circle: ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);}
+          let x_level = centerX < 35 ? 0 : (centerX > 265 ? 265 : -1);
+          let width = 33;
+          let y_level;
+          let height;
+          if (x_level === -1) {continue;}
+          if (centerY < 34) {
+            y_level = 0
+            height = 34
+          } else if (centerY < 70) {
+            y_level = 34
+            height = 30
+          } else if (centerY < 100) {
+            y_level = 74
+            height = 30
+          } else {
+            y_level = 100
+            height = 50
+          }
+          ctx.rect(x_level, y_level, width, height);
         } else if (drawType == 'rect') {
           try {
             let y_level = centerY < 80 ? 0 : 80
@@ -1786,7 +1815,7 @@ function drawFields(name) {
         if (shapeArr[4].toLowerCase() == 'true') {
           ctx.fillStyle = shapeArr[3];
         }
-        if (drawType == 'rect') {
+        if (drawType == 'rect' || drawType == 'circle') {
           ctx.fillStyle = 'rgba(255, 165, 0, 0.2)'
         }
         ctx.stroke();
@@ -1816,6 +1845,7 @@ function onFieldClick(event) {
   //Turns coordinates into a numeric box
   let box = ((Math.ceil(event.offsetY / target.height * resY) - 1) * resX) + Math.ceil(event.offsetX / target.width * resX);
   let coords = event.offsetX + "," + event.offsetY;
+
   let allowableResponses = document.getElementById("allowableResponses" + base).value;
 
   if(allowableResponses != "none"){
@@ -1873,7 +1903,22 @@ function onFieldClick(event) {
       document.getElementById("cycle_" + cycleTimer.value).click();
     }
   }
-
+  let centerX = event.offsetX
+  let centerY = event.offsetY
+  let x_level = centerX < 35 ? 0 : (centerX > 265 ? 265 : -1);
+  if (x_level === -1) {drawFields(); return;}
+  let y_level;
+  if (centerY < 34) {
+    y_level = 0
+  } else if (centerY < 70) {
+    y_level = 1
+  } else if (centerY < 100) {
+    y_level = 2
+  } else {
+    y_level = 3
+  }
+  let field_component = document.getElementById('canvas' + base)
+  field_component.setAttribute('grid_coords', `${x_level}${y_level}`)
   drawFields()
 }
 
