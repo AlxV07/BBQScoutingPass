@@ -10,43 +10,8 @@
 		<script src="resources/js/googleSheets.js"></script>
 		<script src="resources/js/scoutingPASS.js"></script>
 		<script src="2024/crescendo_config.js"></script>
-		<link rel="stylesheet" href="resources/css/bbqScoutingPASS_RGBColorTheme.css">
+		<link id="stylesheet" rel="stylesheet" href="resources/css/bbqScoutingPASS_RGBColorTheme.css">
 	</head>
-
-	<script>
-		// RGB theme :DDD
-		function updateRGB() {
-			let c = getRandomColor()
-			document.body.style.color = c;
-			document.body.style.borderColor = c;
-			document.body.style.backgroundColor = c;
-			let buttons = document.querySelectorAll('input[type="button"]');
-			buttons.forEach(function(button) {
-				button.style.backgroundColor = c;
-			});
-			let texts = document.querySelectorAll('input[type="text"]');
-			texts.forEach(function(text) {
-				text.style.backgroundColor = c;
-			});
-			let numbers = document.querySelectorAll('input[type="number"]');
-			numbers.forEach(function(number) {
-				number.style.backgroundColor = c;
-			});
-			let radios = document.querySelectorAll('input[type="radio"]');
-			radios.forEach(function(radio) {
-				radio.style.backgroundColor = c;
-			});
-		}
-		function getRandomColor() {
-			let letters = '0123456789ABCDEF';
-			let color = '#';
-			for (let i = 0; i < 6; i++) {
-				color += letters[Math.floor(Math.random() * 16)];
-			}
-			return color;
-		}
-		setInterval(updateRGB, 1000)  // Works w/ `bbqScoutingPASS_RGBColorTheme.css`; Comment line if not using theme
-	</script>
 
 	<body>
 		<form id="scoutingForm" onsubmit="return false" name="scoutingForm">
@@ -56,7 +21,11 @@
 				<div id="prematch" class="main-panel" style="background-color: black;">
 					<h1 id="prematchHeader1" class="page_title"></h1>
 					<h2 id="prematchHeader2">Pre-Match</h2>
-					<p class="match-label"><input type="button" value="Next" id="nextButton1" onclick="swipePage(1)"></p>
+					<p class="match-label">
+						<input type="button" onclick="nextStylesheet()" value="Toggle Theme">
+						<br><br>
+						<input type="button" value="Next" id="nextButton1" onclick="swipePage(1)">
+					</p>
 					<table id="prematch_table">
 					<!-- ###PRE-MATCH-COMPONENTS###-->
 					</table>

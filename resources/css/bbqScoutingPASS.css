@@ -1,8 +1,7 @@
 @font-face {
-    font-family: 'Alx';
     font-style: normal;
     font-weight: normal;
-    src: url("../fonts/SourceCodePro-VariableFont_wght.ttf") format('truetype');
+    font-family: "Source Code Pro";
 }
 
 html, body {
@@ -10,12 +9,10 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    color: white;
-    background-color: black;
+    color: white; background-color: black;
 }
 
 #prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
-    font-family: Alx;
     text-align: center;
     color: white;
     border-color: orangered;
@@ -38,7 +35,6 @@ html, body {
     border: 1px solid;
 }
 .button {
-    font-family: Alx;
     font-size: 16px;
     background: orangered;
     color: black;
@@ -91,7 +87,6 @@ html, body {
 }
 
 h1{
-    font-family: Alx;
     text-align: center;
     border-style: groove;
     border-color: orangered;
@@ -102,7 +97,6 @@ h1{
 }
 
 h2{
-    font-family: Alx;
     text-align: center;
     font-size: 30px;
     font-weight: 300;
@@ -111,7 +105,6 @@ h2{
 #nextButton1, #nextButton2, #nextButton3, #nextButton4, #nextButton5, #nextButton6, #nextButton7, #nextButton8, #nextButton9, #nextButton10,
 .clearForm, .submitForm, #displayButton, #copyButton,
 .undoButton, .flipButton {
-    font-family: Alx;
     padding: 10px;
     background-color: orangered;
     color: black;
@@ -121,7 +114,6 @@ h2{
 }
 
 #prevButton1, #prevButton2, #prevButton3, #prevButton4, #prevButton5, #prevButton6, #prevButton7, #prevButton8, #prevButton9 {
-    font-family: Alx;
     background-color: white;
     color: black;
     padding: 10px;
