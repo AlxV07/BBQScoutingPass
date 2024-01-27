@@ -2200,21 +2200,11 @@ function nextStylesheet() {
   let stylesheet = document.getElementById('stylesheet');
   if (stylesheetIdx === 0) {
     stylesheet.href = "resources/css/bbqScoutingPASS_RGBColorTheme.css";
-    // rgbIntervalIdx = setInterval(updateRGB, 1000)
-
-    // HEHE
-    stylesheet.href = "resources/css/bbqScoutingPASS_UwUTheme.css";
-    setColor('pink')
-    // HEHE
+    rgbIntervalIdx = setInterval(updateRGB, 1000)
   } else if (stylesheetIdx === 1) {
     stylesheet.href = "resources/css/bbqScoutingPASS.css";
     setColor('orangered')
     clearInterval(rgbIntervalIdx)
-
-    // HEHE
-    stylesheet.href = "resources/css/bbqScoutingPASS_UwUTheme.css";
-    setColor('pink')
-    // HEHE
   } else {
     stylesheet.href = "resources/css/bbqScoutingPASS_UwUTheme.css";
     setColor('pink')
