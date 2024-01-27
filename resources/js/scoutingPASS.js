@@ -264,6 +264,55 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
   return idx + 1;
 }
 
+function addResetCycleTimeButton(table, idx, name, data, code_identifier) {
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.classList.add("title");
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  // let cell2 = row.insertCell(1);
+  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
+  if (data.hasOwnProperty('tooltip')) {
+    cell1.setAttribute("title", data.tooltip);
+  }
+  // cell2.classList.add("field");
+  let inp = document.createElement("input");
+  inp.setAttribute("id", "input_" + data.code);
+  inp.setAttribute("type", "button");
+  inp.setAttribute("onclick", `resetCycleTime(\"${code_identifier}\")`)
+  inp.setAttribute("value", "Start / Reset Cycle Time")
+  setInterval(function() {
+    try {
+      let break_component = document.getElementById(`break_${code_identifier}break`)
+      let r = break_component.getAttribute('prev_cycle_end_time')
+      r = r == null ? 0 : ((Date.now() - r) / 1000).toFixed(1)
+      inp.setAttribute("value", `Start / Reset Cycle Time (${r})`)
+    } catch (e) {
+      alert(e)
+    }
+  }, 10);
+  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
+    inp.setAttribute("name", data.gsCol);
+  } else {
+    inp.setAttribute("name", data.code);
+  }
+  if (data.hasOwnProperty('defaultValue')) {
+    inp.setAttribute("value", data.defaultValue);
+  }
+  if (data.hasOwnProperty('disabled')) {
+    inp.setAttribute("disabled", "");
+  }
+  cell1.appendChild(inp);
+  return idx + 1;
+}
+
+function resetCycleTime(code_identifier) {
+  let break_component = document.getElementById(`break_${code_identifier}break`)
+  break_component.setAttribute("prev_cycle_end_time", Date.now().toString())
+}
+
 bicycle_component_identifier = 'cycle'
 
 // Add bicycle
@@ -288,6 +337,14 @@ function addBicycle(table, idx, name, data) {
             "type": "break"
         }`)
   idx = addBreak(table, idx, break_data.name, break_data)
+
+  let reset_cycle_time_button_data = JSON.parse(`
+  { 
+    "name": "Reset Cycle Time:",
+    "code": "${code_identifier}reset_cycle_time",
+    "type": "resetCycleTimeButton"
+  }`)
+  idx = addResetCycleTimeButton(table, idx, reset_cycle_time_button_data.name, reset_cycle_time_button_data, code_identifier)
 
   let source_data;
   if (code_identifier == bicycle_component_identifier + 'a') { // Auton
