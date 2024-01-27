@@ -377,8 +377,8 @@ function addBicycle(table, idx, name, data) {
       "hpg": "HP Ground<br>",
       "hpo": "HP (other)<br>",
       "oga": "O.G. Auton<br>",
-      "g": "Ground",
-      "ap": "Alliance Partner<br>"
+      "g": "Ground<br>",
+      "ap": "Alliance Partner"
      }
      }`)
   }
