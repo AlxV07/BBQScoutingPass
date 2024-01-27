@@ -355,7 +355,6 @@ function addBicycle(table, idx, name, data) {
      "type": "radio",
      "choices": {
       "pl": "Preload<br>",
-      "ap": "Alliance Partner<br>",
       "b1": "B1",
       "b2": "B2",
       "b3": "B3<br>",
@@ -379,6 +378,7 @@ function addBicycle(table, idx, name, data) {
       "hpo": "HP (other)<br>",
       "oga": "O.G. Auton<br>",
       "g": "Ground"
+      "ap": "Alliance Partner<br>",
      }
      }`)
   }
