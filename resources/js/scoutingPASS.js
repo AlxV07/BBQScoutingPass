@@ -1483,6 +1483,9 @@ function getData(dataFormat) {
     } else if (fieldname == 'as') {
       let field = document.getElementById('canvas_' + 'as')
       let field_value = field.getAttribute('grid_coords')
+      if (field_value == null) {
+        alert('Missing Auto Start Position!')
+      }
       /*
       0   4
       1   5
@@ -1905,8 +1908,19 @@ function onFieldClick(event) {
   }
   let centerX = event.offsetX
   let centerY = event.offsetY
-  let x_level = centerX < 35 ? 0 : (centerX > 265 ? 265 : -1);
-  if (x_level === -1) {drawFields(); return;}
+  let x_level;
+  let field_component = document.getElementById('canvas' + base)
+  if (centerX < 35) {
+    x_level = 0
+  } else {
+    if (centerX > 265) {
+      x_level = 1
+    } else {
+      field_component.removeAttribute('grid_coords')
+      drawFields();
+      return;
+    }
+  }
   let y_level;
   if (centerY < 34) {
     y_level = 0
@@ -1917,7 +1931,6 @@ function onFieldClick(event) {
   } else {
     y_level = 3
   }
-  let field_component = document.getElementById('canvas' + base)
   field_component.setAttribute('grid_coords', `${x_level}${y_level}`)
   drawFields()
 }
