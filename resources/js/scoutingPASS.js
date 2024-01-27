@@ -45,7 +45,8 @@ class Cycle {
       ["r3","k"],
       ["c4","g"],
       ["c5","h"],
-      ['pl', "p"] // preload
+      ['pl', "p"], // preload
+      ['ap', "l"] // alliance partner
   ])
   static target_condense_map = new Map([
         ['par', 0],
@@ -354,6 +355,7 @@ function addBicycle(table, idx, name, data) {
      "type": "radio",
      "choices": {
       "pl": "Preload<br>",
+      "ap": "Alliance Partner<br>",
       "b1": "B1",
       "b2": "B2",
       "b3": "B3<br>",
