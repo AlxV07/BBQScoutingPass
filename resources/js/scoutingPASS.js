@@ -62,7 +62,7 @@ class Cycle {
       ["c4","g"],
       ["c5","h"],
       ['pl', "p"], // preload
-      ['ap', "l"] // alliance partner
+      ['ap', "5"] // alliance partner
   ])
   static target_condense_map = new Map([
         ['par', 0],
