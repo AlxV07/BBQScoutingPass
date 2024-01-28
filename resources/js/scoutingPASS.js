@@ -1567,7 +1567,6 @@ function getData(dataFormat) {
       let sources = []
       /* Zone id chart
       | 0 | 1 | 2 | 3 | 4 | 5 |
-      | 6 | 7 | 8 | 9 | 10| 11|
        */
       let zone_ids = []
       let targets = []
@@ -1577,7 +1576,8 @@ function getData(dataFormat) {
         let cycle = cycles[i]
         gametimes.push(cycle.gametime)
         sources.push(cycle.source)
-        zone_ids.push(parseInt(cycle.shot_from.substring(0, 1)) + (parseInt(cycle.shot_from.substring(1, 2)) * 6)) // X + Y
+        let p = parseInt(cycle.shot_from.substring(0, 1))
+        zone_ids.push(Form['r'].value.startsWith('r') ? 5 - p : p)
         targets.push(cycle.target)
         statuses.push(cycle.status)
         times.push(cycle.time)
@@ -1838,8 +1838,8 @@ function drawFields(name) {
           ctx.rect(x_level, y_level, width, height);
         } else if (drawType == 'rect') {
           try {
-            let y_level = centerY < 80 ? 0 : 80
-            let height = 80
+            let y_level = 0
+            let height = 160
             let x_level;
             let width;
             if (centerX < 35) {
