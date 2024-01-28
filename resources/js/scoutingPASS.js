@@ -1,5 +1,4 @@
 // ScoutingPASS.js
-//
 // The guts of the ScoutingPASS application
 // Written by Team 2451 - PWNAGE; (HACK-EDITED BY ALX :DDD)
 
@@ -14,16 +13,33 @@ let enableGoogleSheets = false;
 let pitScouting = false;
 let checkboxAs = 'YN';
 
-// Options
+function startTouch(e) {
+  initialX = e.touches[0].screenX;
+}
+
+function moveTouch(e) {
+  if (initialX === null) {
+    return;
+  }
+  let currentX = e.changedTouches[0].screenX;
+  let diffX = initialX - currentX;
+  // sliding horizontally
+  if (diffX / screen.width > xThreshold) {
+    // swiped left
+    swipePage(1);
+  } else if (diffX / screen.width < -xThreshold) {
+    // swiped right
+    swipePage(-1);
+  }
+  initialX = null;
+}
+
+// Options (NEEDED FOR SOME REASON LOL)
 let options = {
   correctLevel: QRCode.CorrectLevel.L,
   quietZone: 15,
   quietZoneColor: '#FFFFFF'
 };
-
-// Must be filled in: s=scouter, e=event,  l=level(q,qf,sf,f), m=match#, r=robot(r1,r2,b1..), t=team#
-// let requiredFields = ["s", "e", "m", "l", "r", "as"];  // requires auton start pos ("as")
-let requiredFields = []
 
 let prev_cycle_end_time = null
 let cycles = []
@@ -104,7 +120,6 @@ function nextCycle(code_identifier) {
 }
 
 function saveCycle(code_identifier) {
-  try {
     let Form = document.forms.scoutingForm;
     let src = Form[`${code_identifier}src`]
     let src_value = Cycle.src_condense_map.get(src.value ? src.value.replace(/"/g, '').replace(/;/g, "-") : "");
@@ -152,9 +167,6 @@ function saveCycle(code_identifier) {
     )
     cycles.push(cycle)
     return []
-  } catch (e) {
-    alert(e)
-  }
 }
 
 function clearCycle(code_identifier) {
@@ -239,22 +251,13 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  // let cell2 = row.insertCell(1);
-  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
-  // cell2.classList.add("field");
+  cell1.innerHTML = name + '&nbsp;';
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "button");
   inp.setAttribute("onclick", `nextCycle(\"${code_identifier}\")`)
   inp.setAttribute("value", "Next Cycle")
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
+  inp.setAttribute("name", data.code);
   if (data.hasOwnProperty('defaultValue')) {
     inp.setAttribute("value", data.defaultValue);
   }
@@ -273,32 +276,16 @@ function addResetCycleTimeButton(table, idx, name, data, code_identifier) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
-  // let cell2 = row.insertCell(1);
-  cell1.innerHTML = name + '&nbsp;';  // No need to show name for button
+  cell1.innerHTML = name + '&nbsp;';
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
-  // cell2.classList.add("field");
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "button");
   inp.setAttribute("onclick", `resetCycleTime(\"${code_identifier}\")`)
   inp.setAttribute("value", "Start / Reset Cycle Time")
-  setInterval(function() {
-    try {
-      let break_component = document.getElementById(`break_${code_identifier}break`)
-      let r = break_component.getAttribute('prev_cycle_end_time')
-      r = r == null ? 0 : ((Date.now() - r) / 1000).toFixed(1)
-      inp.setAttribute("value", `Start / Reset Cycle Time (${r})`)
-    } catch (e) {
-      alert(e)
-    }
-  }, 10);
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
+  inp.setAttribute("name", data.code);
   if (data.hasOwnProperty('defaultValue')) {
     inp.setAttribute("value", data.defaultValue);
   }
@@ -306,6 +293,12 @@ function addResetCycleTimeButton(table, idx, name, data, code_identifier) {
     inp.setAttribute("disabled", "");
   }
   cell1.appendChild(inp);
+  setInterval(function() {
+      let break_component = document.getElementById(`break_${code_identifier}break`)
+      let r = break_component.getAttribute('prev_cycle_end_time')
+      r = r == null ? 0 : ((Date.now() - r) / 1000).toFixed(1)
+      inp.setAttribute("value", `Start / Reset Cycle Time (${r})`)
+  }, 10);
   return idx + 1;
 }
 
@@ -846,9 +839,6 @@ function addCounter(table, idx, name, data) {
   }
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   cell2.classList.add("field");
 
   const button1 = document.createElement("input");
@@ -862,11 +852,7 @@ function addCounter(table, idx, name, data) {
   inp.classList.add("counter");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "text");
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
+  inp.setAttribute("name", data.code);
   inp.setAttribute("style", "background-color: black; color: white;border: none; text-align: center;");
   inp.setAttribute("disabled", "");
   inp.setAttribute("value", 0);
@@ -880,16 +866,6 @@ function addCounter(table, idx, name, data) {
   button2.setAttribute("onclick", "counter(this.parentElement, 1)");
   button2.setAttribute("value", "+");
   cell2.appendChild(button2);
-
-  if (data.hasOwnProperty('cycleTimer')) {
-    if (data.cycleTimer != "") {
-      inp = document.createElement('input');
-      inp.setAttribute("hidden", "");
-      inp.setAttribute("id", "cycleTimer_" + data.code);
-      inp.setAttribute("value", data.cycleTimer);
-      cell.appendChild(inp);
-    }
-  }
 
   if (data.hasOwnProperty('defaultValue')) {
     var def = document.createElement("input");
@@ -1097,18 +1073,11 @@ function addText(table, idx, name, data) {
   }
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   cell2.classList.add("field");
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "text");
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
+  inp.setAttribute("name", data.code);
   if (data.hasOwnProperty('size')) {
     inp.setAttribute("size", data.size);
   }
@@ -1151,9 +1120,6 @@ function addBreak(table, idx, name, data) {
     return idx + 1;
   }
   cell1.innerHTML = `${name} (${cell1.getAttribute("nof_cycles")}):` + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   return idx + 1
 }
 
@@ -1167,20 +1133,12 @@ function addNumber(table, idx, name, data) {
   }
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   cell2.classList.add("field");
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "number");
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
-  if ((data.type == 'team') ||
-    (data.type == 'match')) {
+  inp.setAttribute("name", data.code);
+  if ((data.type == 'team') || (data.type == 'match')) {
     inp.setAttribute("onchange", "updateMatchStart(event)");
   }
   if (data.hasOwnProperty('min')) {
@@ -1230,9 +1188,6 @@ function addRadio(table, idx, name, data) {
   }
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   cell2.classList.add("field");
   if ((data.type == 'level') ||
     (data.type == 'robot')
@@ -1290,18 +1245,11 @@ function addCheckbox(table, idx, name, data) {
   }
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
-  if (data.hasOwnProperty('tooltip')) {
-    cell1.setAttribute("title", data.tooltip);
-  }
   cell2.classList.add("field");
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "checkbox");
-  if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
-    inp.setAttribute("name", data.gsCol);
-  } else {
-    inp.setAttribute("name", data.code);
-  }
+  inp.setAttribute("name", data.code);
   cell2.appendChild(inp);
 
   if (data.type == 'bool') {
@@ -1324,7 +1272,6 @@ function addElement(table, idx, data) {
   if (data.hasOwnProperty('name')) {
     name = data.name
   }
-
   let err;
   if (!data.hasOwnProperty('type')) {
     console.log("No type specified");
@@ -1334,7 +1281,6 @@ function addElement(table, idx, data) {
     idx = addText(table, idx, name, err);
     return
   }
-
   if (data.type == 'counter') {
     idx = addCounter(table, idx, name, data);
   } else if (data.type == 'bicycle') {
@@ -1463,40 +1409,18 @@ function configure() {
   return 0
 }
 
-function getRobot(){
-  return document.forms.scoutingForm.r.value;
-}
-
 function resetRobot() {
   for (rb of document.getElementsByName('r')) {
     rb.checked = false
   }
 }
 
-function getLevel(){
-  return document.forms.scoutingForm.l.value
+function getRobot(){
+  return document.forms.scoutingForm.r.value;
 }
 
-function validateData() {
-  let ret = true;
-  let errStr = "";
-  for (rf of requiredFields) {
-    let thisRF = document.forms.scoutingForm[rf];
-    if (thisRF.value == "[]" || thisRF.value.length == 0) {
-      if (rf == "as") {
-        rftitle = "Auto Start Position"
-      } else {
-        thisInputEl = thisRF instanceof RadioNodeList ? thisRF[0] : thisRF;
-        rftitle = thisInputEl.parentElement.parentElement.children[0].innerHTML.replace("&nbsp;","");
-      }
-      errStr += rf + ": " + rftitle + "\n";
-      ret = false;
-    }
-  }
-  if (ret == false) {
-    alert("Enter all required values\n" + errStr);
-  }
-  return ret
+function getLevel(){
+  return document.forms.scoutingForm.l.value
 }
 
 function getData(dataFormat) {
@@ -1523,8 +1447,8 @@ function getData(dataFormat) {
 
   // collect the names of all the elements in the form
   let fieldnames = Array.from(Form.elements, formElmt => formElmt.name);
-  // make sure to add the name attribute only to elements from which you want to collect values.  Radio button groups all share the same name
-  // so those element names need to be de-duplicated here as well.
+  // make sure to add the name attribute only to elements from which you want to collect values.
+  // Radio button groups all share the same name so those element names need to be de-duplicated here.
   fieldnames.forEach((fieldname) => {
     if (fieldname != "" && !UniqueFieldNames.includes(fieldname)) {
       UniqueFieldNames.push(fieldname)
@@ -1557,22 +1481,19 @@ function getData(dataFormat) {
     }
     fd.append(fieldname, thisFieldValue)
   })
-
-  if (dataFormat == "kvs") {
-    Array.from(fd.keys()).forEach(thisKey => {
-      strArray.push(thisKey + "=" + fd.get(thisKey))
-    });
-    // try {
-      let gametimes = []
-      let sources = []
-      /* Zone id chart
-      | 0 | 1 | 2 | 3 | 4 | 5 |
-       */
-      let zone_ids = []
-      let targets = []
-      let statuses = []
-      let times = []
-      for (let i = 0; i < cycles.length; i++) {
+  Array.from(fd.keys()).forEach(thisKey => {
+    strArray.push(thisKey + "=" + fd.get(thisKey))
+  });
+    let gametimes = []
+    let sources = []
+    /* Zone id chart
+    | 0 | 1 | 2 | 3 | 4 | 5 |
+    */
+    let zone_ids = []
+    let targets = []
+    let statuses = []
+    let times = []
+    for (let i = 0; i < cycles.length; i++) {
         let cycle = cycles[i]
         gametimes.push(cycle.gametime)
         sources.push(cycle.source)
@@ -1581,25 +1502,15 @@ function getData(dataFormat) {
         targets.push(cycle.target)
         statuses.push(cycle.status)
         times.push(cycle.time)
-      }
-    // } catch (e) {
-    //   alert(e)
-    // }
+    }
     // normal_data;gametimes;sources;zone_ids;targets;statuses;times
     //            |-> cycle data, in array format, delimiter = comma
     return `${strArray.join(";")};gat=[${gametimes.join(',')}];src=[${sources.join(',')}];zis=[${zone_ids.join(',')}];tar=[${targets.join(',')}];sts=[${statuses.join(',')}];tim=[${times.join(',')}]`
-
-  //} else if (dataFormat == "tsv") {
-  //   Array.from(fd.keys()).forEach(thisKey => {
-  //     str.push(fd.get(thisKey))
-  //   });
-  //   return str.join(";")
-  } else {
-    return "unsupported dataFormat"
-  }
 }
 
-function updateQRHeader() {
+function qr_regenerate() {
+  let data = getData(dataFormat)
+  qr.makeCode(data)
   let str = 'Event: !EVENT! Match: !MATCH! Robot: !ROBOT! Team: !TEAM!';
   if (!pitScouting) {
     str = str
@@ -1612,21 +1523,6 @@ function updateQRHeader() {
       .replace('!TEAM!', document.getElementById("input_t").value);
   }
   document.getElementById("display_qr-info").textContent = str;
-}
-
-function qr_regenerate() {
-  // Validate required pre-match date (event, match, level, robot, scouter)
-  if (!pitScouting) {  
-    if (validateData() == false) {
-      // Don't allow a swipe until all required data is filled in
-      return false
-    }
-  }
-  // Get data
-  let data = getData(dataFormat)  // bug
-  // Regenerate QR Code
-  qr.makeCode(data)
-  updateQRHeader()
   return true
 }
 
@@ -1755,29 +1651,6 @@ function clearForm() {
   } catch (e) {
     alert(e)
   }
-}
-
-function startTouch(e) {
-  initialX = e.touches[0].screenX;
-}
-
-function moveTouch(e) {
-  if (initialX === null) {
-    return;
-  }
-
-  let currentX = e.changedTouches[0].screenX;
-  let diffX = initialX - currentX;
-
-  // sliding horizontally
-  if (diffX / screen.width > xThreshold) {
-    // swiped left
-    swipePage(1);
-  } else if (diffX / screen.width < -xThreshold) {
-    // swiped right
-    swipePage(-1);
-  }
-  initialX = null;
 }
 
 function swipePage(increment) {
