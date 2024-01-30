@@ -216,11 +216,6 @@ const config_data = `
             "defaultValue": "a"
         },
         {
-            "name": "Fits Under Stage?",
-            "code": "us",
-            "type": "bool"
-        },
-        {
             "name": "Ranking Points",
             "code": "rp",
             "type": "text",
