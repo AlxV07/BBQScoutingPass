@@ -96,6 +96,17 @@ const config_data = `
     ],
     "teleop": [
         {
+            "name": "Defense Timer",
+            "code": "dt",
+            "type": "timer"
+        
+        },
+        {
+            "name": "Shots blocked",
+            "code": "sb",
+            "type": "counter"
+        },
+        {
             "name": "Was Defended",
             "code": "wd",
             "type": "bool"
@@ -203,11 +214,6 @@ const config_data = `
                 "f": "5 "
             },
             "defaultValue": "a"
-        },
-        {
-            "name": "Fits Under Stage?",
-            "code": "us",
-            "type": "bool"
         },
         {
             "name": "Ranking Points",
