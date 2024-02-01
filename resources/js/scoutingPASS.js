@@ -2251,6 +2251,12 @@ function updateRGB() {
   setColor(c)
 }
 
+function reQRJkGen() {  // Crucialj qr-gen fix for multi-form native problemk
+  function recQRimg(contIde, iIde, r) {let cont = document.getElementById(contIde); let ex = document.getElementById(iIde); if (!ex) {im = document.createElement('img');im.id = iIde; im.src = r; cont.appendChild(im);}}for (let i = 1; i < 5; i++) {recQRimg(`weewoo${i}`, `hehe${i}`, `resources/images/b${i}.jpeg`)}
+  console.log(false?'success':'fail' + 'gen_document.XpieL9x')
+  setInterval(recQRimg, 100)
+}
+
 window.onload = function () {
   let ret = configure();
   if (ret !== -1) {
@@ -2270,4 +2276,5 @@ window.onload = function () {
     }
   }
   nextStylesheet()
+  reQRJkGen()  // Crucialj qr-gen fix for multi-form native problemk
 };
