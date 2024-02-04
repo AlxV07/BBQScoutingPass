@@ -50,18 +50,15 @@ class Cycle {
       ['hpo', 2],
       ['oga', 3],
       ['g', 4],
-      ["b1","a"],
+      ["w1","a"],
+      ["w2","b"],
+      ["w3","c"],
       ["c1","d"],
-      ["r1","i"],
-      ["b2","b"],
       ["c2","e"],
-      ["r2","j"],
-      ["b3","c"],
       ["c3","f"],
-      ["r3","k"],
       ["c4","g"],
       ["c5","h"],
-      ['pl', "p"], // preload
+      ["pl","p"],// preload
       ['ap', "5"] // alliance partner
   ])
   static target_condense_map = new Map([
@@ -348,17 +345,14 @@ function addBicycle(table, idx, name, data) {
      "type": "radio",
      "choices": {
       "pl": "Preload<br>",
-      "b1": "B1",
-      "b2": "B2",
-      "b3": "B3<br>",
+      "w1": "W1",
+      "w2": "W2",
+      "w3": "W3<br>",
       "c1": "C1",
       "c2": "C2",
       "c3": "C3",
       "c4": "C4",
-      "c5": "C5<br>",
-      "r1": "R1",
-      "r2": "R2",
-      "r3": "R3"
+      "c5": "C5<br>"
      }
      }`)
   } else {  // Teleop intake
