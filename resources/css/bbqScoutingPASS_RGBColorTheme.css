@@ -108,10 +108,11 @@ h2{
 table{
     width: 50%;
     margin: auto;
-    /* align-content: center; */
+
+    align-content: center;
     table-layout: fixed;
     
-    /* text-align: center; */
+    text-align: center;
 }
 
 td {
@@ -120,9 +121,9 @@ td {
 
 tr {
     width: 100px !important;
-    /* text-align: left;  */
-    /* vertical-align: middle; */
-    /* border: 2px solid red; */
+
+    text-align: left;
+    vertical-align: middle;
     padding: 10px;
 }
 
