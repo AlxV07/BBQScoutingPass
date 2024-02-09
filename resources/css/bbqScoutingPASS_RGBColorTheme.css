@@ -13,7 +13,7 @@ html, body {
 }
 
 #prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
-    text-align: center;
+    /* text-align: center; */
     font-size: 13px;
     letter-spacing: 1px;
     border-width: 4px;
@@ -23,7 +23,7 @@ html, body {
     text-align: right;
 }
 .field {
-    text-align: left;
+    /* text-align: left; */
 }
 .field-image {
     margin: 2vw;
@@ -108,6 +108,7 @@ h2{
 table{
     width: 50%;
     margin: auto;
+
     align-content: center;
     table-layout: fixed;
     
@@ -120,9 +121,9 @@ td {
 
 tr {
     width: 100px !important;
+
     text-align: left;
     vertical-align: middle;
-    /* border: 2px solid red; */
     padding: 10px;
 }
 
