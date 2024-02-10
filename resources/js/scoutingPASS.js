@@ -350,7 +350,7 @@ function addBicycle(table, idx, name, data) {
       "c2": "C2",
       "p2": "P2<br>",
       "c3": "C3",
-      "c3": "P3<br>",
+      "p3": "P3<br>",
       "c4": "C4",
       "c5": "C5<br>"
      }
