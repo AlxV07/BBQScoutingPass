@@ -121,23 +121,24 @@ h2{
     padding: 10px;
 }
 
-table {
-    display: flex;
-    border: 1px solid black;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
+table{
+    width: 50%;
     margin: auto;
+    align-content: center;
+    table-layout: fixed;
+
+    text-align: center;
 }
 
 td {
-    padding: 10px 4px;
+    width: 50px;
 }
-
-tbody {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
+tr {
+    width: 100px !important;
+    text-align: left;
+    vertical-align: middle;
+    /* border: 2px solid red; */
+    padding: 10px;
 }
 
 input {
