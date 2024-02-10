@@ -345,12 +345,12 @@ function addBicycle(table, idx, name, data) {
      "type": "radio",
      "choices": {
       "pl": "Preload<br>",
-      "p1": "P1",
-      "p2": "P2",
-      "p3": "P3<br>",
       "c1": "C1",
+      "p1": "P1<br>",
       "c2": "C2",
+      "p2": "P2<br>",
       "c3": "C3",
+      "c3": "P3<br>",
       "c4": "C4",
       "c5": "C5<br>"
      }
