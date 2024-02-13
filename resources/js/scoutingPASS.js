@@ -351,8 +351,8 @@ function addBicycle(table, idx, name, data) {
       "p2": "P2<br>",
       "c3": "C3",
       "p3": "P3<br>",
-      "c4": "C4",
-      "c5": "C5<br>"
+      "c4": "C4<br>",
+      "c5": "C5"
      }
      }`)
   } else {  // Teleop intake
@@ -442,18 +442,31 @@ function onShotFromClicked(event) {
     let centerY = event.offsetY
     let y_level = centerY < 80 ? 0 : 1
     let x_level;
-    if (centerX < 35) {
-      x_level = 0
-    } else if (centerX < 100) {
-      x_level = 1
-    } else if (centerX < 150) {
-      x_level = 2
-    } else if (centerX < 200) {
-      x_level = 3
-    } else if (centerX < 260) {
-      x_level = 4
-    } else {
-      x_level = 5
+    let isTinyBot = false //tiny box
+      
+    let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
+
+    alert(`${centerX} ${centerY}`)
+    if (35 < centerX && centerX < placeholder1 || placeholder2 < centerX && centerX < 265) {
+        if (placeholder3 < centerY && centerY < placeholder4){
+            x_level = 6
+            isTinyBot = true
+        }
+    }
+    if (!isTinyBot){
+        if (centerX < 35) {
+          x_level = 0
+        } else if (centerX < 100) {
+          x_level = 1
+        } else if (centerX < 150) {
+          x_level = 2
+        } else if (centerX < 200) {
+          x_level = 3
+        } else if (centerX < 265) {
+          x_level = 4
+        } else {
+          x_level = 5
+        }
     }
 
     shotfrom_component = document.getElementById('canvas' + base)
@@ -1482,6 +1495,7 @@ function getData(dataFormat) {
     let sources = []
     /* Zone id chart
     | 0 | 1 | 2 | 3 | 4 | 5 |
+    | 0 |5|1|   2   |3|5| 4 |
     */
     let zone_ids = []
     let targets = []
@@ -1492,7 +1506,13 @@ function getData(dataFormat) {
         gametimes.push(cycle.gametime)
         sources.push(cycle.source)
         let p = parseInt(cycle.shot_from.substring(0, 1))
-        zone_ids.push(Form['r'].value.startsWith('r') ? 5 - p : p)
+        if (Form['r'].value.startsWith('r')){
+            p = 5 - p
+        }
+        if (p >= 3) {
+            p -= 1
+        }
+        zone_ids.push(p)
         targets.push(cycle.target)
         statuses.push(cycle.status)
         times.push(cycle.time)
@@ -1709,24 +1729,49 @@ function drawFields(name) {
             let height = 160
             let x_level;
             let width;
-            if (centerX < 35) {
-              x_level = 0
-              width = 34
-            } else if (centerX < 100) {
-              x_level = 34
-              width = 69
-            } else if (centerX < 150) {
-              x_level = 100
-              width = 48
-            } else if (centerX < 200) {
-              x_level = 150
-              width = 43
-            } else if (centerX < 260) {
-              x_level = 193
-              width = 70
-            } else {
-              x_level = 266
-              width = 34
+            let isTinyBot = false //tiny box
+            let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
+
+              //placeholders -> 1: x of left of left box | 2: x of left of right box | 3: y of top of box | 4: y of bottom of box
+              //                   drawFields and onShotFromClicked 
+            if (placeholder3 < centerY && centerY < placeholder4){
+                if (35 < centerX && centerX < placeholder1) {
+                    x_level = 35
+                    y_level = placeholder3
+                    width = placeholder1
+                    height = placeholder4 - placeholder3
+                    isTinyBot = true
+                }
+                if (placeholder2 < centerX && centerX < 265){
+                    x_level = placeholder2
+                    y_level = placeholder3
+                    width = 265 - placeholder2
+                    height = placeholder4 - placeholder3
+                    isTinyBot = true
+                    //1.e4 e5 2.Ke2! Ke7! 3.Ke1! Ke8! 4. Ke2! Ke7! 5. Ke1! Ke8! 1/2 1/2
+                    
+                }
+            }
+            if (!isTinyBot){
+                if (centerX < 35) {
+                  x_level = 0
+                  width = 34
+                } else if (centerX < 100) {
+                  x_level = 34
+                  width = 69
+                } else if (centerX < 150) {
+                  x_level = 100
+                  width = 48
+                } else if (centerX < 200) {
+                  x_level = 150
+                  width = 43
+                } else if (centerX < 265) {
+                  x_level = 193
+                  width = 70
+                } else {
+                  x_level = 266
+                  width = 34
+                }
             }
             ctx.rect(x_level, y_level, width, height);
           } catch (e) {
