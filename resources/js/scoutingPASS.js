@@ -1506,8 +1506,10 @@ function getData(dataFormat) {
         gametimes.push(cycle.gametime)
         sources.push(cycle.source)
         let p = parseInt(cycle.shot_from.substring(0, 1))
-        if (Form['r'].value.startsWith('r')){
+        if (p !== 6) {  // Not a tiny box thingy
+          if (Form['r'].value.startsWith('r')) {
             p = 5 - p
+          }
         }
         if (p >= 3) {
             p -= 1
