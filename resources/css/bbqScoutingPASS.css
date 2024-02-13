@@ -14,6 +14,7 @@ html, body {
     background-color: black;
     border-color: orangered;
     font-family: BBQScoutingPass, ui-monospace;
+    overflow-x: hidden;
 }
 
 #prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
@@ -115,6 +116,7 @@ h2{
     margin-left: 5px;
     margin-right: 5px;
     display: inline-block;
+    font-family: BBQScoutingPass, ui-monospace;
 }
 
 #prevButton1, #prevButton2, #prevButton3, #prevButton4, #prevButton5, #prevButton6, #prevButton7, #prevButton8, #prevButton9 {

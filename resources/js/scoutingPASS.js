@@ -453,8 +453,8 @@ function onShotFromClicked(event) {
     let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
 
     alert(`${centerX} ${centerY}`)
-    if (35 < centerX && centerX < placeholder1 || placeholder2 < centerX && centerX < 265) {
-        if (placeholder3 < centerY && centerY < placeholder4){
+    if (35 < centerX < placeholder1 || placeholder2 < centerX < 265) {
+        if (placeholder3 < centerY < placeholder4){
             x_level = 6
             isTinyBot = true
         }
@@ -1735,7 +1735,7 @@ function drawFields(name) {
             height = 50
           }
           ctx.rect(x_level, y_level, width, height);
-        } else if (drawType == 'rect') {
+        } else if (drawType === 'rect') {
           try {
             let y_level = 0
             let height = 160
@@ -1745,23 +1745,21 @@ function drawFields(name) {
             let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
 
               //placeholders -> 1: x of left of left box | 2: x of left of right box | 3: y of top of box | 4: y of bottom of box
-              //                   drawFields and onShotFromClicked 
-            if (placeholder3 < centerY && centerY < placeholder4){
-                if (35 < centerX && centerX < placeholder1) {
+              //                   drawFields, onShotFromClicked
+            if (placeholder3 < centerY < placeholder4){
+                if (35 < centerX < placeholder1) {
                     x_level = 35
                     y_level = placeholder3
                     width = placeholder1
                     height = placeholder4 - placeholder3
                     isTinyBot = true
                 }
-                if (placeholder2 < centerX && centerX < 265){
+                else if (placeholder2 < centerX < 265){
                     x_level = placeholder2
                     y_level = placeholder3
                     width = 265 - placeholder2
                     height = placeholder4 - placeholder3
                     isTinyBot = true
-                    //1.e4 e5 2.Ke2! Ke7! 3.Ke1! Ke8! 4. Ke2! Ke7! 5. Ke1! Ke8! 1/2 1/2
-                    
                 }
             }
             if (!isTinyBot){
