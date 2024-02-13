@@ -1,12 +1,12 @@
 @font-face {
-    font-family: 'Alx';
+    font-family: 'JenCookieLol';
     font-style: normal;
     font-weight: normal;
     src: url("../fonts/Cookiemonster-gv11.ttf") format('truetype');
 }
 
 html, body {
-    font-family: Alx;
+    font-family: JenCookieLol;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -146,6 +146,7 @@ input {
     font-size: 16px;
     color: pink;
     background-color: white;
+    font-family: JenCookieLol;
 }
 input[type='radio']:checked:after {
     width: 9px;

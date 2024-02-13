@@ -249,6 +249,7 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
     return idx + 1;
   }
   cell1.innerHTML = name + '&nbsp;';
+  let cell2 = row.insertCell(1)
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "button");
@@ -261,7 +262,7 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
   if (data.hasOwnProperty('disabled')) {
     inp.setAttribute("disabled", "");
   }
-  cell1.appendChild(inp);
+  cell2.appendChild(inp);
   return idx + 1;
 }
 
@@ -277,11 +278,12 @@ function addResetCycleTimeButton(table, idx, name, data, code_identifier) {
   if (data.hasOwnProperty('tooltip')) {
     cell1.setAttribute("title", data.tooltip);
   }
+  let cell2 = row.insertCell(1)
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "button");
   inp.setAttribute("onclick", `resetCycleTime(\"${code_identifier}\")`)
-  inp.setAttribute("value", "Start / Reset Cycle Time")
+  inp.setAttribute("value", "Start / Reset")
   inp.setAttribute("name", data.code);
   if (data.hasOwnProperty('defaultValue')) {
     inp.setAttribute("value", data.defaultValue);
@@ -289,12 +291,16 @@ function addResetCycleTimeButton(table, idx, name, data, code_identifier) {
   if (data.hasOwnProperty('disabled')) {
     inp.setAttribute("disabled", "");
   }
-  cell1.appendChild(inp);
+  cell2.appendChild(inp)
   setInterval(function() {
       let break_component = document.getElementById(`break_${code_identifier}break`)
       let r = break_component.getAttribute('prev_cycle_end_time')
-      r = r == null ? 0 : ((Date.now() - r) / 1000).toFixed(1)
-      inp.setAttribute("value", `Start / Reset Cycle Time (${r})`)
+      if (r === null) {
+        inp.setAttribute("value", `Start (0)`)
+      } else {
+        r = ((Date.now() - r) / 1000).toFixed(1)
+        inp.setAttribute("value", `Reset (${r})`)
+      }
   }, 10);
   return idx + 1;
 }
@@ -331,7 +337,7 @@ function addBicycle(table, idx, name, data) {
 
   let reset_cycle_time_button_data = JSON.parse(`
   { 
-    "name": "Start / Reset Cycle Time:",
+    "name": "Cycle Time:",
     "code": "${code_identifier}reset_cycle_time",
     "type": "resetCycleTimeButton"
   }`)
@@ -1116,12 +1122,16 @@ function addText(table, idx, name, data) {
 
 function addBreak(table, idx, name, data) {
   let row = table.insertRow(idx);
-  let cell1 = row.insertCell(0);
+  let cell1 = row;
   cell1.classList.add("title");
   cell1.setAttribute('id', 'break_' + data.code)
   cell1.setAttribute('nof_cycles', '0')
   cell1.style.fontWeight = 'bold'
   cell1.style.fontSize = 'large'
+
+  cell1.border = '1px'
+  cell1.borderColor = 'orangered'
+
   if (!data.hasOwnProperty('code')) {
     cell1.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;

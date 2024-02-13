@@ -2,6 +2,7 @@
     font-style: normal;
     font-weight: normal;
     font-family: "Source Code Pro";
+    src: url("../fonts/SourceCodePro-Regular.ttf") format('truetype');
 }
 
 html, body {
@@ -106,12 +107,12 @@ h2{
 }
 
 table{
-    width: 50%;
+    width: 100%;
     margin: auto;
-
     align-content: center;
     table-layout: fixed;
-    
+    border-style: groove;
+    border-width: 1px;
     text-align: center;
 }
 
@@ -121,7 +122,7 @@ td {
 }
 
 tr {
-    width: 100px !important;
+    width: 100px;
 
     text-align: left;
     vertical-align: middle;
@@ -130,6 +131,7 @@ tr {
 
 
 input {
+    font-family: "Source Code Pro";
     font-size: 16px;
     transition: 2s ease;
 }

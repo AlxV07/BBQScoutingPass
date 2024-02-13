@@ -1,7 +1,8 @@
 @font-face {
+    font-family: 'BBQScoutingPass';
+    src: url("../fonts/SourceCodePro-Regular.ttf") format('truetype');
     font-style: normal;
     font-weight: normal;
-    font-family: "Source Code Pro";
 }
 
 html, body {
@@ -9,16 +10,19 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    color: white; background-color: black;
+    color: white;
+    background-color: black;
+    border-color: orangered;
+    font-family: BBQScoutingPass, ui-monospace;
 }
 
 #prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
     text-align: center;
     color: white;
     border-color: orangered;
+    border-width: 4px;
     font-size: 13px;
     letter-spacing: 1px;
-    border-width: 4px;
 }
 
 .title {
@@ -38,6 +42,7 @@ html, body {
     font-size: 16px;
     background: orangered;
     color: black;
+    font-family: BBQScoutingPass, ui-monospace;
 }
 .match-label{
     text-align: center;
@@ -68,7 +73,6 @@ html, body {
     color: white;
     background-color: black;
     border-color: orangered;
-    font-family : Alx;
     text-align: justify;
 }
 
@@ -120,28 +124,30 @@ h2{
 }
 
 table{
-    width: 50%;
+    width: 100%;
     margin: auto;
     align-content: center;
     table-layout: fixed;
-
+    border-style: groove;
+    border-color: orangered;
+    border-width: 1px;
     text-align: center;
 }
 
 td {
-    padding: 10px 0px;
+    padding: 10px 0;
     width: 50px;
 }
 
 tr {
-    width: 100px !important;
+    width: 50px;
     text-align: left;
     vertical-align: middle;
-    /* border: 2px solid red; */
     padding: 10px;
 }
 
 input {
+    font-family: BBQScoutingPass, ui-monospace;
     font-size: 16px;
     color: orangered;
     background-color: white;
