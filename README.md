@@ -1,14 +1,20 @@
 <div id="top"></div>
 
-# BBQScoutingPASS
+# BBQScoutingPass
 
-#### A scouting system for FIRST FRC competitions created by PWNAGE - Team #2451 **(& hacked apart by Alx for 2714 BBQ ;D)**.
+#### A FIRST FRC competitions scouting system __originally__ created by PWNAGE Team #2451, but revamped by Alx, Ant, & Vik for Team #2714 BBQ ;D
 
-<a href="https://PWNAGERobotics.github.io/ScoutingPASS">Live Demo</a> . <a href="https://PWNAGERobotics.github.io/ScoutingPASS/pit.html">Pit Scouting</a> . <a href="#getting-started">Getting Started</a> . <a href="#faq">FAQ</a>
+<a href="https://alxv07.github.io/BBQScoutingPass">Live Demo</a> . <a href="#getting-started">Getting Started</a> . <a href="#faq">FAQ</a>
 
-![Stars](https://img.shields.io/github/stars/PWNAGERobotics/ScoutingPASS?style=plastic) ![Forks](https://img.shields.io/github/forks/PWNAGERobotics/ScoutingPASS?style=plastic) ![watchers](https://img.shields.io/github/watchers/PWNAGERobotics/ScoutingPASS?style=plastic)
-<h1></h1>
+# STUFF WE DID:
+* BBQ Scouters use Amazon Fire Tablets at competitions. We've completely cut out the need for an internet connection by loading the app in a webview contained within an Android APK.
+* Added custom components not included in the original ScoutingPASS (most notably: automatically timed scoring-cycle forms, more useful field zone visuals & data, THEMES)
+* COOL THEMES WOOOO (there's a cool RGB flashy one)
+* Deleted stuff that (didn't work / (we didn't (need / like))) :DDD
+* Cleaned up a bunch o messy code
+* Fixed very weird alignment stuff in the original ScoutingPASS THANKS VIK
 
+## HUGE THANKS TO PWANGERS FOR EVERYTHING THO GO FUDDSTER :DDD
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -18,7 +24,6 @@
     <li><a href="#live-demo">Live Demo</a></li>
     <li><a href="#description">Description</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#pit-scouting">Pit Scouting</a></li>
     <li><a href="#how-we-scout">How We Scout</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -37,7 +42,7 @@
 ### **Universal**
   * Works on any device that has a web browser that runs JavaScript.  Apple, Android, phones, tablets, laptops, it works on them all.
 ### **Low/No Bandwidth**
-  * Neither WiFi nor Cellular required at event.  The web page can be downloaded before the event and doesn't need to be reloaded.
+  * Neither Wi-Fi nor Cellular required at event.  The web page can be downloaded before the event and doesn't need to be reloaded.
 ### **Easy hosting**
   * Self hosting via GitHub. (See directions below)
 ### **[The Blue Alliance Integration](https://thebluealliance.com)**
@@ -47,7 +52,7 @@
 <div id="live-demo"></div>
 
 ## Live Demo
-This repository is hosted on GitHub Pages.  You can view a live version of it here: https://PWNAGERobotics.github.io/ScoutingPASS.  (You can host your ScoutingPASS application on GitHub Pages as well.)
+This repository is hosted on GitHub Pages.  You can view a live version of it here: https://alxv07.github.io/BBQScoutingPass.  (You can host your ScoutingPASS application on GitHub Pages as well.)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 <div id="description"></div>
@@ -105,7 +110,7 @@ Note: For this to work, the schedule has to be posted to The Blue Alliance.  Tha
 
 ## How We Scout
 
-We have 6 scouts per match.  One for each robot.  Each scout has this web site pre-loaded on their phone or a team tablet.
+We have 6 scouts per match, one for each robot.  Each scout has this web site pre-loaded on their phone or a team tablet.
 
 The lead scout has a laptop with Excel and a wired hand held scanner in the stands with the scouts.  ([Nadomoo Bur3072 - ~$55](https://www.amazon.com/NADAMOO-Wireless-Barcode-Cordless-Computer/dp/B06Y2RMM51?th=1))
 
@@ -173,13 +178,6 @@ Note: The Auto Start (as) element is special in that it will only keep track of 
 <div id="things-to-add"></div>
 
 ## Things we might want to add someday:
-* Add images to Pit Scouting
-* More options for processing the QR code
-* Mac version of Excel spreadsheet
-* Drag and Drop configuration editing (Avoid JSON editing)
-* Better Google Sheets integration / instructions
-* Improve look and feel
-* Create videos to illustrate how to setup, configure, and use the application
 * Better error messages
 * Pre-parse JSON for validity to avoid cryptic errors when parsing
 * Incorporate [Statbotics.io](http://statbotics.io/) data

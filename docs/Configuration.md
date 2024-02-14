@@ -65,12 +65,6 @@ Acceptable values:<br>
 "10" - If checked the output of the element will contain a "1".  If not checked it will contain a "0".<br>
 "TF" - If checked the output of the element will contain a "T".  If not checked it will contain a "F".<br>
 
-### google-sheets-enable
-To enable the Google Sheets interface, set this field to "true".  Default is "false".
-
-If you enable Google Sheets you'll want to also specify "gsCol" attributes on all the fields to allow more descriptive names of the columns in Google Sheets.  See the [GoogleSheets.md](GoogleSheets Docs) for more info.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 <div id="game-sections"></div>
 
 ## Game Sections
