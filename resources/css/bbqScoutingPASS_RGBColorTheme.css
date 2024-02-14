@@ -63,7 +63,7 @@ html, body {
     position: absolute;
     left: 0;
     top: 0;
-    font-family : Alx;
+    font-family : "Source Code Pro", ui-monospace;
     text-align: justify;
 }
 
@@ -117,7 +117,7 @@ table{
 }
 
 td {
-    padding: 10px 0px;
+    padding: 10px 0;
     width: 50px;
 }
 
@@ -131,7 +131,7 @@ tr {
 
 
 input {
-    font-family: "Source Code Pro";
+    font-family: "Source Code Pro", ui-monospace;
     font-size: 16px;
     transition: 2s ease;
 }

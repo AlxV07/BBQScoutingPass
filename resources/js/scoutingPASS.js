@@ -1122,10 +1122,12 @@ function addText(table, idx, name, data) {
 
 function addBreak(table, idx, name, data) {
   let row = table.insertRow(idx);
-  let cell1 = row;
+  let cell1 = row.insertCell(0);
   cell1.classList.add("title");
+  cell1.setAttribute("colspan", 2);
   cell1.setAttribute('id', 'break_' + data.code)
   cell1.setAttribute('nof_cycles', '0')
+  cell1.style.textAlign = 'center'
   cell1.style.fontWeight = 'bold'
   cell1.style.fontSize = 'large'
 
