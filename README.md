@@ -15,6 +15,9 @@
 * Fixed very weird alignment stuff in the original ScoutingPASS THANKS VIK
 
 ## HUGE THANKS TO PWANGERS FOR EVERYTHING THO GO FUDDSTER AND ALL THOSE PEOPLE :DDD
+
+(Btw here's their repo: https://pwnagerobotics.github.io/ScoutingPASS/)
+
 (Here on is written by Pwangers)
 
 <!-- TABLE OF CONTENTS -->
