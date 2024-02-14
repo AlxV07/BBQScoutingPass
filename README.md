@@ -14,7 +14,8 @@
 * Cleaned up a bunch o messy code
 * Fixed very weird alignment stuff in the original ScoutingPASS THANKS VIK
 
-## HUGE THANKS TO PWANGERS FOR EVERYTHING THO GO FUDDSTER :DDD
+## HUGE THANKS TO PWANGERS FOR EVERYTHING THO GO FUDDSTER AND ALL THOSE PEOPLE :DDD
+(Here on is written by Pwangers)
 
 <!-- TABLE OF CONTENTS -->
 <details>
