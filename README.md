@@ -42,8 +42,6 @@
   * Self hosting via GitHub. (See directions below)
 ### **[The Blue Alliance Integration](https://thebluealliance.com)**
   * Pull data for the event from The Blue Alliance.  Team #s, Team Names and Schedules
-### **[Google Sheets Integration](docs/GoogleSheets.md) <BETA>**
-  * Send data to a Google Sheets spreadsheet
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 <div id="live-demo"></div>
@@ -102,21 +100,7 @@ To enable The Blue Alliance API:
 Note: For this to work, the schedule has to be posted to The Blue Alliance.  That usually doesn't happen until just before the event. (a few days to a few hours)  To test this you can point it to a past event.   Set the event to 2020ilch.   Reload the page to load the schedule for that event. Select Match 6 and Blue-2.  You should see it populate the Team # to 2451, and the next line will show the team name, PWNAGE.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-<div id="pit-scouting"></div>
 
-## Pit Scouting:
-
-ScountingPASS now supports Pit Scouting
-
-To access the pit scouting page, add '/pit.html' to the end of your URL.  (i.e. http://pwnagerobotics.github.io/ScoutingPASS/pit.html)
-
-It works almost exactly like the main scouting pages, except there is only one page of input.   Once your scouters have filled out the information, swipe left to display the QR code.   That QR code can be scanned to push the data to Excel.
-
-The default configuration file is 2024/crescendo_pit_config.js.   You can modify that configuration to meet your needs.
-
-We realize that you may not want to lug your computer around the pits to scan each QR code.  Our recommendation is to have your scouters take screenshot of the QR codes.   Then when they are back to the scouting computer, just go through the photos to scan each QR code.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 <div id="how-we-scout"></div>
 
 ## How We Scout

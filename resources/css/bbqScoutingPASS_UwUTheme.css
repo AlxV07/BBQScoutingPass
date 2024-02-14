@@ -1,12 +1,12 @@
 @font-face {
-    font-family: 'JenCookieLol';
+    font-family: "JenCookie<3";
     font-style: normal;
     font-weight: normal;
     src: url("../fonts/Cookiemonster-gv11.ttf") format('truetype');
 }
 
 html, body {
-    font-family: JenCookieLol;
+    font-family: "JenCookie<3", ui-monospace;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -126,19 +126,17 @@ table{
     margin: auto;
     align-content: center;
     table-layout: fixed;
-
     text-align: center;
 }
 
 td {
-    padding: 10px 0px;
+    padding: 10px 0;
     width: 50px;
 }
 tr {
-    width: 100px !important;
+    width: 100px;
     text-align: left;
     vertical-align: middle;
-    /* border: 2px solid red; */
     padding: 10px;
 }
 
@@ -146,7 +144,7 @@ input {
     font-size: 16px;
     color: pink;
     background-color: white;
-    font-family: JenCookieLol;
+    font-family: "JenCookie<3", ui-monospace;
 }
 input[type='radio']:checked:after {
     width: 9px;

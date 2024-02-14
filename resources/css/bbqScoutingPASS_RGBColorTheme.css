@@ -14,7 +14,6 @@ html, body {
 }
 
 #prematch_table, #postmatch_table, #auton_table, #endgame_table, #teleop_table, #testcycle_table {
-    /* text-align: center; */
     font-size: 13px;
     letter-spacing: 1px;
     border-width: 4px;
@@ -22,9 +21,6 @@ html, body {
 
 .title {
     text-align: right;
-}
-.field {
-    /* text-align: left; */
 }
 .field-image {
     margin: 2vw;

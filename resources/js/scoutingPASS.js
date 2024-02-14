@@ -133,13 +133,13 @@ function saveCycle(code_identifier) {
     let gametime = code_identifier.endsWith('a') ? 1 : 2
 
     let undefined_vars = []
-    if (src_value == undefined) {
+    if (src_value === undefined) {
       undefined_vars.push('\"Source\"')
     }
-    if (shotfrom_value == undefined) {
+    if (shotfrom_value === undefined) {
       undefined_vars.push('\"Shot From Region\"')
     }
-    if (tar_value == undefined) {
+    if (tar_value === undefined) {
       undefined_vars.push('\"Target\"')
     }
     if (undefined_vars.length > 0) {
@@ -160,7 +160,7 @@ function saveCycle(code_identifier) {
         shotfrom_value,
         tar_value,
         success_value,
-        prev_cycle_end_time == 0 ? 0.0 : ((Date.now() - prev_cycle_end_time) / 1000).toFixed(1),
+        prev_cycle_end_time === 0 ? 0.0 : ((Date.now() - prev_cycle_end_time) / 1000).toFixed(1),
     )
     cycles.push(cycle)
     return []
@@ -169,17 +169,17 @@ function saveCycle(code_identifier) {
 function clearCycle(code_identifier) {
   // Clear XY coordinates
   let inputs = document.querySelectorAll("[id*='XY_']");
-  for (e of inputs) {
-    code = e.id.substring(3)
+  for (let e of inputs) {
+    let code = e.id.substring(3)
     e.value = "[]"
   }
   inputs = new Set(document.querySelectorAll("[id*='input_']"));
-  for (e of inputs) {
-    code = e.id.substring(6)
+  for (let e of inputs) {
+    let code = e.id.substring(6)
     if (!code.startsWith(code_identifier)) {
       continue
     }
-    if (e.className == "clickableImage") {
+    if (e.className === "clickableImage") {
       e.value = "[]";
       continue;
     }
@@ -196,19 +196,19 @@ function clearCycle(code_identifier) {
       } catch (p) {
         defaultValue = ''
       }
-      if (defaultValue != "") {
-        if (defaultValue == e.value) {
+      if (defaultValue !== "") {
+        if (defaultValue === e.value) {
           e.checked = true
           document.getElementById("display_" + baseCode).value = defaultValue
         }
       }
     } else {
-      if (e.type == "number" || e.type == "text" || e.type == "hidden") {
-        if ((e.className == "counter") ||
-            (e.className == "timer") ||
-            (e.className == "cycle")) {
+      if (e.type === "number" || e.type === "text" || e.type === "hidden") {
+        if ((e.className === "counter") ||
+            (e.className === "timer") ||
+            (e.className === "cycle")) {
           e.value = 0
-          if (e.className == "timer" || e.className == "cycle") {
+          if (e.className === "timer" || e.className === "cycle") {
             // Stop interval
             let timerStatus = document.getElementById("status_" + code);
             let startButton = document.getElementById("start_" + code);
@@ -216,11 +216,11 @@ function clearCycle(code_identifier) {
             let intervalId = intervalIdField.value;
             timerStatus.value = 'stopped';
             startButton.innerHTML = "Start";
-            if (intervalId != '') {
+            if (intervalId !== '') {
               clearInterval(intervalId);
             }
             intervalIdField.value = '';
-            if (e.className == "cycle") {
+            if (e.className === "cycle") {
               document.getElementById("cycletime_" + code).value = "[]"
               document.getElementById("display_" + code).value = ""
             }
@@ -228,8 +228,8 @@ function clearCycle(code_identifier) {
         } else {
           e.value = ""
         }
-      } else if (e.type == "checkbox") {
-        if (e.checked == true) {
+      } else if (e.type === "checkbox") {
+        if (e.checked === true) {
           e.checked = false
         }
       } else {
@@ -315,14 +315,14 @@ bicycle_component_identifier = 'cycle'
 // Add bicycle
 function addBicycle(table, idx, name, data) {
   let code_identifier;
-  if (data.bicycle_id == 'auton') {
+  if (data.bicycle_id === 'auton') {
     code_identifier = bicycle_component_identifier + 'a';
   } else {  // teleop
     code_identifier = bicycle_component_identifier + 't';
   }
 
   let break_name;
-  if (code_identifier == bicycle_component_identifier + 'a') {
+  if (code_identifier === bicycle_component_identifier + 'a') {
      break_name = 'Auton'
   } else {
     break_name = 'Teleop'
@@ -344,7 +344,7 @@ function addBicycle(table, idx, name, data) {
   idx = addResetCycleTimeButton(table, idx, reset_cycle_time_button_data.name, reset_cycle_time_button_data, code_identifier)
 
   let source_data;
-  if (code_identifier == bicycle_component_identifier + 'a') { // Auton
+  if (code_identifier === bicycle_component_identifier + 'a') { // Auton
     source_data = JSON.parse(`{ 
      "name": "Source",
      "code": "${code_identifier}src",
@@ -428,7 +428,7 @@ function onShotFromClicked(event) {
     let resX = 12;
     let resY = 6;
     let dimensions = document.getElementById("dimensions" + base);
-    if (dimensions.value != "") {
+    if (dimensions.value !== "") {
       let arr = dimensions.value.split(' ');
       resX = arr[0];
       resY = arr[1];
@@ -437,9 +437,9 @@ function onShotFromClicked(event) {
     let box = ((Math.ceil(event.offsetY / target.height * resY) - 1) * resX) + Math.ceil(event.offsetX / target.width * resX);
     let coords = event.offsetX + "," + event.offsetY;
     let allowableResponses = document.getElementById("allowableResponses" + base).value;
-    if (allowableResponses != "none") {
+    if (allowableResponses !== "none") {
       let allowableResponsesList = allowableResponses.split(',').map(Number);
-      if (allowableResponsesList.indexOf(box) == -1) {
+      if (allowableResponsesList.indexOf(box) === -1) {
         return;
       }
     }
@@ -449,7 +449,8 @@ function onShotFromClicked(event) {
     let y_level = centerY < 80 ? 0 : 1
     let x_level;
     let isTinyBot = false //tiny box
-      
+
+    let placeholder2, placeholder3, placeholder4;
     let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
 
     alert(`${centerX} ${centerY}`)
@@ -475,7 +476,7 @@ function onShotFromClicked(event) {
         }
     }
 
-    shotfrom_component = document.getElementById('canvas' + base)
+    let shotfrom_component = document.getElementById('canvas' + base)
     shotfrom_component.setAttribute('grid_coords', `${x_level}${y_level}`)
 
     //Cumulating values
@@ -487,7 +488,7 @@ function onShotFromClicked(event) {
     let boxArr = Array.from(JSON.parse(changingInput.value));
     let xyArr = Array.from(JSON.parse(changingXY.value));
 
-    if ((toggleClick.toLowerCase() == 'true') &&
+    if ((toggleClick.toLowerCase() === 'true') &&
         (boxArr.includes(box))) {
       // Remove it
       let idx = boxArr.indexOf(box);
@@ -499,11 +500,11 @@ function onShotFromClicked(event) {
       if (JSON.stringify(changingXY.value).length <= 2) {
         changingXY.value = JSON.stringify([coords]);
         changingInput.value = JSON.stringify([box]);
-      } else if (clickRestriction == "one") {
+      } else if (clickRestriction === "one") {
         // Replace box and coords
         changingXY.value = JSON.stringify([coords]);
         changingInput.value = JSON.stringify([box]);
-      } else if (clickRestriction == "onePerBox") {
+      } else if (clickRestriction === "onePerBox") {
         // Add if box already not in box list/Array
         if (!boxArr.includes(box)) {
           boxArr.push(box);
@@ -522,7 +523,7 @@ function onShotFromClicked(event) {
         changingInput.value = JSON.stringify(boxArr);
       }
       // If associated with cycleTimer - send New Cycle EVENT
-      if (cycleTimer != null) {
+      if (cycleTimer !== null) {
         document.getElementById("cycle_" + cycleTimer.value).click();
       }
     }
@@ -540,7 +541,7 @@ function addShotFrom(table, idx, name, data) {
   cell.setAttribute("style", "text-align: center;");
   cell.classList.add("title");
   if (!data.hasOwnProperty('code')) {
-    cell1.innerHTML = `Error: No code specified for ${name}`;
+    cell.innerHTML = `Error: No code specified for ${name}`;
     return idx + 1;
   }
   cell.innerHTML = name;
@@ -550,14 +551,14 @@ function addShotFrom(table, idx, name, data) {
 
   let showFlip = true;
   if (data.hasOwnProperty('showFlip')) {
-    if (data.showFlip.toLowerCase() == 'false') {
+    if (data.showFlip.toLowerCase() === 'false') {
       showFlip = false;
     }
   }
 
   let showUndo = true;
   if (data.hasOwnProperty('showUndo')) {
-    if (data.showUndo.toLowerCase() == 'false') {
+    if (data.showUndo.toLowerCase() === 'false') {
       showUndo = false;
     }
   }
@@ -600,7 +601,7 @@ function addShotFrom(table, idx, name, data) {
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
-  var canvas = document.createElement('canvas');
+  let canvas = document.createElement('canvas');
   //canvas.onclick = onFieldClick;
   canvas.setAttribute("onclick", "onShotFromClicked(event)");
   canvas.setAttribute("class", "field-image-src");
@@ -637,8 +638,8 @@ function addShotFrom(table, idx, name, data) {
   inp.setAttribute("id", "clickRestriction_" + data.code);
   inp.setAttribute("value", "none");
   if (data.hasOwnProperty('clickRestriction')) {
-    if ((data.clickRestriction == "one") ||
-        (data.clickRestriction == "onePerBox")) {
+    if ((data.clickRestriction === "one") ||
+        (data.clickRestriction === "onePerBox")) {
       inp.setAttribute("value", data.clickRestriction);
     }
   }
@@ -660,7 +661,7 @@ function addShotFrom(table, idx, name, data) {
   inp.setAttribute("id", "dimensions_" + data.code);
   inp.setAttribute("value", "12 6");
   if (data.hasOwnProperty('dimensions')) {
-    if (data.dimensions != "") {
+    if (data.dimensions !== "") {
       // TODO: Add validation for "X Y" format
       inp.setAttribute("value", data.dimensions);
     }
@@ -673,7 +674,7 @@ function addShotFrom(table, idx, name, data) {
   // Default shape: white circle of size 5 not filled in
   inp.setAttribute("value", "rect 5 white white true");
   if (data.hasOwnProperty('shape')) {
-    if (data.shape != "") {
+    if (data.shape !== "") {
       // TODO: Add validation for "shape size color fill" format
       inp.setAttribute("value", data.shape);
     }
@@ -685,7 +686,7 @@ function addShotFrom(table, idx, name, data) {
   inp.setAttribute("id", "toggleClick_" + data.code);
   inp.setAttribute("value", "false");
   if (data.hasOwnProperty('toggleClick')) {
-    if (data.toggleClick != "") {
+    if (data.toggleClick !== "") {
       // TODO: Add validation for true/false format
       inp.setAttribute("value", data.toggleClick);
     }
@@ -693,7 +694,7 @@ function addShotFrom(table, idx, name, data) {
   cell.appendChild(inp);
 
   if (data.hasOwnProperty('cycleTimer')) {
-    if (data.cycleTimer != "") {
+    if (data.cycleTimer !== "") {
       inp = document.createElement('input');
       inp.setAttribute("hidden", "");
       inp.setAttribute("id", "cycleTimer_" + data.code);
@@ -707,7 +708,7 @@ function addShotFrom(table, idx, name, data) {
   row.setAttribute("style", "display:none");
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
-  var img = document.createElement('img');
+  let img = document.createElement('img');
   img.src = data.filename;
   img.setAttribute("id", "img_" + data.code);
   img.setAttribute("class", "field-image-src");
@@ -740,7 +741,7 @@ function addTimer(table, idx, name, data) {
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
 
-  if (data.type == 'cycle') {
+  if (data.type === 'cycle') {
     let ct = document.createElement('input');
     ct.setAttribute("type", "hidden");
     ct.setAttribute("id", "cycletime_" + data.code);
@@ -768,14 +769,14 @@ function addTimer(table, idx, name, data) {
   cell.appendChild(button1);
 
   let inp = document.createElement("input");
-  if (data.type == 'timer') {
+  if (data.type === 'timer') {
     inp.classList.add("timer");
   } else {
     inp.classList.add("cycle");
   }
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "text");
-  if (data.type != 'cycle') {
+  if (data.type !== 'cycle') {
     if (enableGoogleSheets && data.hasOwnProperty('gsCol')) {
       inp.setAttribute("name", data.gsCol);
     } else {
@@ -798,7 +799,7 @@ function addTimer(table, idx, name, data) {
   lineBreak = document.createElement("br");
   cell.appendChild(lineBreak);
 
-  if (data.type == 'cycle') {
+  if (data.type === 'cycle') {
     const button3 = document.createElement("input");
     button3.setAttribute("id", "cycle_" + data.code);
     button3.setAttribute("type", "button");
@@ -881,7 +882,7 @@ function addCounter(table, idx, name, data) {
   cell2.appendChild(button2);
 
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    let def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
@@ -908,14 +909,14 @@ function addClickableImage(table, idx, name, data) {
 
   let showFlip = true;
   if (data.hasOwnProperty('showFlip')) {
-    if (data.showFlip.toLowerCase() == 'false') {
+    if (data.showFlip.toLowerCase() === 'false') {
       showFlip = false;
     }
   }
 
   let showUndo = true;
   if (data.hasOwnProperty('showUndo')) {
-    if (data.showUndo.toLowerCase() == 'false') {
+    if (data.showUndo.toLowerCase() === 'false') {
       showUndo = false;
     }
   }
@@ -958,7 +959,7 @@ function addClickableImage(table, idx, name, data) {
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
   cell.setAttribute("style", "text-align: center;");
-  var canvas = document.createElement('canvas');
+  let canvas = document.createElement('canvas');
   //canvas.onclick = onFieldClick;
   canvas.setAttribute("onclick", "onFieldClick(event)");
   canvas.setAttribute("class", "field-image-src");
@@ -995,8 +996,8 @@ function addClickableImage(table, idx, name, data) {
   inp.setAttribute("id", "clickRestriction_" + data.code);
   inp.setAttribute("value", "none");
   if (data.hasOwnProperty('clickRestriction')) {
-    if ((data.clickRestriction == "one") ||
-      (data.clickRestriction == "onePerBox")) {
+    if ((data.clickRestriction === "one") ||
+      (data.clickRestriction === "onePerBox")) {
       inp.setAttribute("value", data.clickRestriction);
     }
   }
@@ -1018,7 +1019,7 @@ function addClickableImage(table, idx, name, data) {
   inp.setAttribute("id", "dimensions_" + data.code);
   inp.setAttribute("value", "12 6");
   if (data.hasOwnProperty('dimensions')) {
-    if (data.dimensions != "") {
+    if (data.dimensions !== "") {
       // TODO: Add validation for "X Y" format
       inp.setAttribute("value", data.dimensions);
     }
@@ -1031,7 +1032,7 @@ function addClickableImage(table, idx, name, data) {
   // Default shape: white circle of size 5 not filled in
   inp.setAttribute("value", "circle 5 white white true");
   if (data.hasOwnProperty('shape')) {
-    if (data.shape != "") {
+    if (data.shape !== "") {
       // TODO: Add validation for "shape size color fill" format
       inp.setAttribute("value", data.shape);
     }
@@ -1043,15 +1044,14 @@ function addClickableImage(table, idx, name, data) {
   inp.setAttribute("id", "toggleClick_" + data.code);
   inp.setAttribute("value", "false");
   if (data.hasOwnProperty('toggleClick')) {
-    if (data.toggleClick != "") {
+    if (data.toggleClick !== "") {
       // TODO: Add validation for true/false format
       inp.setAttribute("value", data.toggleClick);
     }
   }
   cell.appendChild(inp);
-
   if (data.hasOwnProperty('cycleTimer')) {
-    if (data.cycleTimer != "") {
+    if (data.cycleTimer !== "") {
       inp = document.createElement('input');
       inp.setAttribute("hidden", "");
       inp.setAttribute("id", "cycleTimer_" + data.code);
@@ -1059,20 +1059,18 @@ function addClickableImage(table, idx, name, data) {
       cell.appendChild(inp);
     }
   }
-
   idx += 1
   row = table.insertRow(idx);
   row.setAttribute("style", "display:none");
   cell = row.insertCell(0);
   cell.setAttribute("colspan", 2);
-  var img = document.createElement('img');
+  let img = document.createElement('img');
   img.src = data.filename;
   img.setAttribute("id", "img_" + data.code);
   img.setAttribute("class", "field-image-src");
   img.setAttribute("onload", "drawFields()");
   img.setAttribute("hidden", "");
   cell.appendChild(img);
-
   return idx + 1
 }
 
@@ -1098,7 +1096,7 @@ function addText(table, idx, name, data) {
     inp.setAttribute("maxLength", data.maxSize);
   }
   if (data.hasOwnProperty('defaultValue')) {
-    if (data.type == 'event') {
+    if (data.type === 'event') {
       data.defaultValue = data.defaultValue.toLowerCase();
     }
     inp.setAttribute("value", data.defaultValue);
@@ -1111,7 +1109,7 @@ function addText(table, idx, name, data) {
   }
   cell2.appendChild(inp);
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    let def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
@@ -1130,7 +1128,6 @@ function addBreak(table, idx, name, data) {
   cell1.style.textAlign = 'center'
   cell1.style.fontWeight = 'bold'
   cell1.style.fontSize = 'large'
-
   cell1.border = '1px'
   cell1.borderColor = 'orangered'
 
@@ -1157,7 +1154,7 @@ function addNumber(table, idx, name, data) {
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "number");
   inp.setAttribute("name", data.code);
-  if ((data.type == 'team') || (data.type == 'match')) {
+  if ((data.type === 'team') || (data.type === 'match')) {
     inp.setAttribute("onchange", "updateMatchStart(event)");
   }
   if (data.hasOwnProperty('min')) {
@@ -1178,14 +1175,14 @@ function addNumber(table, idx, name, data) {
   cell2.appendChild(inp);
 
   if (data.hasOwnProperty('defaultValue')) {
-    var def = document.createElement("input");
+    let def = document.createElement("input");
     def.setAttribute("id", "default_" + data.code)
     def.setAttribute("type", "hidden");
     def.setAttribute("value", data.defaultValue);
     cell2.appendChild(def);
   }
 
-  if (data.type == 'team') {
+  if (data.type === 'team') {
     idx += 1
     row = table.insertRow(idx);
     cell1 = row.insertCell(0);
@@ -1208,8 +1205,8 @@ function addRadio(table, idx, name, data) {
   let cell2 = row.insertCell(1);
   cell1.innerHTML = name + '&nbsp;';
   cell2.classList.add("field");
-  if ((data.type == 'level') ||
-    (data.type == 'robot')
+  if ((data.type === 'level') ||
+    (data.type === 'robot')
   ) {
     cell2.setAttribute("onchange", "updateMatchStart(event)");
   }
@@ -1230,7 +1227,7 @@ function addRadio(table, idx, name, data) {
         inp.setAttribute("name", data.code);
       }
       inp.setAttribute("value", c);
-      if (checked == c) {
+      if (checked === c) {
         inp.setAttribute("checked", "");
       }
       cell2.appendChild(inp);
@@ -1271,7 +1268,7 @@ function addCheckbox(table, idx, name, data) {
   inp.setAttribute("name", data.code);
   cell2.appendChild(inp);
 
-  if (data.type == 'bool') {
+  if (data.type === 'bool') {
     cell2.innerHTML += "(checked = Yes)";
   }
 
@@ -1300,25 +1297,25 @@ function addElement(table, idx, data) {
     idx = addText(table, idx, name, err);
     return
   }
-  if (data.type == 'counter') {
+  if (data.type === 'counter') {
     idx = addCounter(table, idx, name, data);
-  } else if (data.type == 'bicycle') {
+  } else if (data.type === 'bicycle') {
     idx = addBicycle(table, idx, name, data)
-  } else if (data.type == 'break') {
+  } else if (data.type === 'break') {
     idx = addBreak(table, idx, name, data)
-  } else if ((data.type == 'scouter') || (data.type == 'event') || (data.type == 'text')) {
+  } else if ((data.type === 'scouter') || (data.type === 'event') || (data.type === 'text')) {
     idx = addText(table, idx, name, data);
-  } else if ((data.type == 'level') || (data.type == 'radio') || (data.type == 'robot')) {
+  } else if ((data.type === 'level') || (data.type === 'radio') || (data.type === 'robot')) {
     idx = addRadio(table, idx, name, data);
-  } else if ((data.type == 'match') || (data.type == 'team') || (data.type == 'number')) {
+  } else if ((data.type === 'match') || (data.type === 'team') || (data.type === 'number')) {
     idx = addNumber(table, idx, name, data);
-  } else if ((data.type == 'field_image') || (data.type == 'clickable_image')) {
+  } else if ((data.type === 'field_image') || (data.type === 'clickable_image')) {
     idx = addClickableImage(table, idx, name, data);
-  } else if ((data.type == 'bool') || (data.type == 'checkbox') || (data.type == 'pass_fail')) {
+  } else if ((data.type === 'bool') || (data.type === 'checkbox') || (data.type === 'pass_fail')) {
     idx = addCheckbox(table, idx, name, data);
-  } else if (data.type == 'counter') {
+  } else if (data.type === 'counter') {
     idx = addCounter(table, idx, name, data);
-  } else if ((data.type == 'timer') || (data.type == 'cycle')) {
+  } else if ((data.type === 'timer') || (data.type === 'cycle')) {
     idx = addTimer(table, idx, name, data);
   } else {
     console.log(`Unrecognized type: ${data.type}`);
@@ -1356,13 +1353,13 @@ function configure() {
   }
 
   if (mydata.hasOwnProperty('enable_google_sheets')) {
-    if (mydata.enable_google_sheets.toUpperCase() == 'TRUE') {
+    if (mydata.enable_google_sheets.toUpperCase() === 'TRUE') {
       enableGoogleSheets = true;
     }
   }
 
   if (mydata.hasOwnProperty('pitConfig')) {
-    if (mydata.pitConfig.toUpperCase() == 'TRUE') {
+    if (mydata.pitConfig.toUpperCase() === 'TRUE') {
       pitScouting = true;
     }
   }
@@ -1380,11 +1377,12 @@ function configure() {
       checkboxAs = 'YN';
     }
   }
+  let idx = 0
 
   // Configure prematch screen
   let pmc = mydata.prematch;
   let pmt = document.getElementById("prematch_table");
-  var idx = 0;
+  idx = 0;
   pmc.forEach(element => {
     idx = addElement(pmt, idx, element);
   });
@@ -1416,15 +1414,14 @@ function configure() {
   // Configure postmatch screen
   pmc = mydata.postmatch;
   pmt = document.getElementById("postmatch_table");
-  var idx = 0;
+  idx = 0;
   pmc.forEach(element => {
     idx = addElement(pmt, idx, element);
   });
 
   if (!enableGoogleSheets) {
-    document.getElementById("submit").style.display = "none";
+  document.getElementById("submit").style.display = "none";
   }
-
   return 0
 }
 
@@ -1469,7 +1466,7 @@ function getData(dataFormat) {
   // make sure to add the name attribute only to elements from which you want to collect values.
   // Radio button groups all share the same name so those element names need to be de-duplicated here.
   fieldnames.forEach((fieldname) => {
-    if (fieldname != "" && !UniqueFieldNames.includes(fieldname)) {
+    if (fieldname !== "" && !UniqueFieldNames.includes(fieldname)) {
       UniqueFieldNames.push(fieldname)
     }
   });
@@ -1480,12 +1477,12 @@ function getData(dataFormat) {
     }
     let thisField = Form[fieldname];
     let thisFieldValue;
-    if (thisField.type == 'checkbox') {
+    if (thisField.type === 'checkbox') {
       thisFieldValue = thisField.checked ? checkedChar : uncheckedChar;
-    } else if (fieldname == 'as') {
+    } else if (fieldname === 'as') {
       let field = document.getElementById('canvas_' + 'as')
       let field_value = field.getAttribute('grid_coords')
-      if (field_value == null) {
+      if (field_value === null) {
         alert('Missing Auto Start Position!')
       }
       /*
@@ -1565,7 +1562,7 @@ function clearForm() {
 
     // Increment match
     match = parseInt(document.getElementById("input_m").value)
-    if (match == NaN) {
+    if (isNaN(match)) {
       document.getElementById("input_m").value = ""
     } else {
       document.getElementById("input_m").value = match + 1
@@ -1588,13 +1585,13 @@ function clearForm() {
       code = e.id.substring(6)
 
       // Don't clear key fields
-      if (code == "m") continue
-      if (code.substring(0, 2) == "r_") continue
-      if (code.substring(0, 2) == "l_") continue
-      if (code == "e") continue
-      if (code == "s") continue
+      if (code === "m") continue
+      if (code.substring(0, 2) === "r_") continue
+      if (code.substring(0, 2) === "l_") continue
+      if (code === "e") continue
+      if (code === "s") continue
 
-      if (e.className == "clickableImage") {
+      if (e.className === "clickableImage") {
         e.value = "[]";
         continue;
       }
@@ -1612,19 +1609,19 @@ function clearForm() {
         } catch (p) {
           defaultValue = ''
         }
-        if (defaultValue != "") {
-          if (defaultValue == e.value) {
+        if (defaultValue !== "") {
+          if (defaultValue === e.value) {
             e.checked = true
             document.getElementById("display_" + baseCode).value = defaultValue
           }
         }
       } else {
-        if (e.type == "number" || e.type == "text" || e.type == "hidden") {
-          if ((e.className == "counter") ||
-              (e.className == "timer") ||
-              (e.className == "cycle")) {
+        if (e.type === "number" || e.type === "text" || e.type === "hidden") {
+          if ((e.className === "counter") ||
+              (e.className === "timer") ||
+              (e.className === "cycle")) {
             e.value = 0
-            if (e.className == "timer" || e.className == "cycle") {
+            if (e.className === "timer" || e.className === "cycle") {
               // Stop interval
               let timerStatus = document.getElementById("status_" + code);
               let startButton = document.getElementById("start_" + code);
@@ -1632,11 +1629,11 @@ function clearForm() {
               let intervalId = intervalIdField.value;
               timerStatus.value = 'stopped';
               startButton.innerHTML = "Start";
-              if (intervalId != '') {
+              if (intervalId !== '') {
                 clearInterval(intervalId);
               }
               intervalIdField.value = '';
-              if (e.className == "cycle") {
+              if (e.className === "cycle") {
                 document.getElementById("cycletime_" + code).value = "[]"
                 document.getElementById("display_" + code).value = ""
               }
@@ -1644,8 +1641,8 @@ function clearForm() {
           } else {
             e.value = ""
           }
-        } else if (e.type == "checkbox") {
-          if (e.checked == true) {
+        } else if (e.type === "checkbox") {
+          if (e.checked === true) {
             e.checked = false
           }
         } else {
@@ -1683,7 +1680,7 @@ function clearForm() {
 
 function swipePage(increment) {
   let q = qr_regenerate()
-  if (q == true) {
+  if (q === true) {
     let slides = document.getElementById("main-panel-holder").children
     if (slide + increment < slides.length && slide + increment >= 0) {
       slides[slide].style.display = "none";
@@ -1698,8 +1695,8 @@ function swipePage(increment) {
 
 function drawFields(name) {
   let fields = document.querySelectorAll("[id*='canvas_']");
-  for (f of fields) {
-    code = f.id.substring(7);
+  for (let f of fields) {
+    let code = f.id.substring(7);
     let img = document.getElementById("img_" + code);
     let shape = document.getElementById("shape_" + code);
     let shapeArr = shape.value.split(' ');
@@ -1709,15 +1706,15 @@ function drawFields(name) {
 
     let xyStr = document.getElementById("XY_" + code).value
     if (JSON.stringify(xyStr).length > 2) {
-      pts = Array.from(JSON.parse(xyStr))
-      for (p of pts) {
+      let pts = Array.from(JSON.parse(xyStr))
+      for (let p of pts) {
         let coord = p.split(",")
         let centerX = coord[0];
         let centerY = coord[1];
         let radius = 5;
         ctx.beginPath();
         let drawType = shapeArr[0].toLowerCase()
-        if (drawType == 'circle') {  // Should only be for auton start pos {Circle: ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);}
+        if (drawType === 'circle') {  // Should only be for auton start pos {Circle: ctx.arc(centerX, centerY, shapeArr[1], 0, 2 * Math.PI, false);}
           let x_level = centerX < 35 ? 0 : (centerX > 265 ? 265 : -1);
           let width = 33;
           let y_level;
@@ -1793,19 +1790,19 @@ function drawFields(name) {
           ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
         }
         ctx.lineWidth = 2;
-        if (shapeArr[2] != "") {
+        if (shapeArr[2] !== "") {
           ctx.strokeStyle = shapeArr[2];
         } else {
           ctx.strokeStyle = '#FFFFFF';
         }
-        if (shapeArr[4].toLowerCase() == 'true') {
+        if (shapeArr[4].toLowerCase() === 'true') {
           ctx.fillStyle = shapeArr[3];
         }
-        if (drawType == 'rect' || drawType == 'circle') {
+        if (drawType === 'rect' || drawType === 'circle') {
           ctx.fillStyle = 'rgba(255, 165, 0, 0.2)'
         }
         ctx.stroke();
-        if (shapeArr[4].toLowerCase() == 'true') {
+        if (shapeArr[4].toLowerCase() === 'true') {
           ctx.fill();
         }
       }
@@ -1822,7 +1819,7 @@ function onFieldClick(event) {
   let resY = 6;
 
   let dimensions = document.getElementById("dimensions" + base);
-  if (dimensions.value != "") {
+  if (dimensions.value !== "") {
     let arr = dimensions.value.split(' ');
     resX = arr[0];
     resY = arr[1];
@@ -1834,9 +1831,9 @@ function onFieldClick(event) {
 
   let allowableResponses = document.getElementById("allowableResponses" + base).value;
 
-  if(allowableResponses != "none"){
+  if(allowableResponses !== "none"){
     let allowableResponsesList = allowableResponses.split(',').map(Number);
-    if (allowableResponsesList.indexOf(box)==-1){
+    if (allowableResponsesList.indexOf(box) === -1){
       return;
     }
   }
@@ -1850,7 +1847,7 @@ function onFieldClick(event) {
   let boxArr = Array.from(JSON.parse(changingInput.value));
   let xyArr = Array.from(JSON.parse(changingXY.value));
 
-  if ((toggleClick.toLowerCase() == 'true') &&
+  if ((toggleClick.toLowerCase() === 'true') &&
     (boxArr.includes(box))) {
     // Remove it
     let idx = boxArr.indexOf(box);
@@ -1862,11 +1859,11 @@ function onFieldClick(event) {
     if (JSON.stringify(changingXY.value).length <= 2) {
       changingXY.value = JSON.stringify([coords]);
       changingInput.value = JSON.stringify([box]);
-    } else if (clickRestriction == "one") {
+    } else if (clickRestriction === "one") {
       // Replace box and coords
       changingXY.value = JSON.stringify([coords]);
       changingInput.value = JSON.stringify([box]);
-    } else if (clickRestriction == "onePerBox") {
+    } else if (clickRestriction === "onePerBox") {
       // Add if box already not in box list/Array
       if (!boxArr.includes(box)) {
         boxArr.push(box);
@@ -1885,7 +1882,7 @@ function onFieldClick(event) {
       changingInput.value = JSON.stringify(boxArr);
     }
     // If associated with cycleTimer - send New Cycle EVENT
-    if (cycleTimer != null) {
+    if (cycleTimer !== null) {
       document.getElementById("cycle_" + cycleTimer.value).click();
     }
   }
@@ -1922,7 +1919,7 @@ function findMiddleOfBox(boxNum, width, height, resX, resY) {
   let boxHeight = height / resY;
   let boxWidth = width / resX;
   let boxX = (boxNum % resX) - 1;
-  if (boxX == -1) { boxX = resX - 1 }
+  if (boxX === -1) { boxX = resX - 1 }
   let boxY = Math.floor((boxNum - boxX + 1) / resX);
   let x = Math.round((boxWidth * boxX) + (Math.floor(boxWidth / 2)));
   let y = Math.round((boxHeight * boxY) + (Math.floor(boxHeight / 2)));
@@ -1938,7 +1935,7 @@ function getTeamName(teamNumber) {
     if (teams) {
       let teamKey = "frc" + teamNumber;
       let ret = "";
-      Array.from(teams).forEach(team => ret = team.key == teamKey ? team.nickname : ret);
+      Array.from(teams).forEach(team => ret = team.key === teamKey ? team.nickname : ret);
       return ret;
     }
   }
@@ -1950,7 +1947,7 @@ function getMatch(matchKey) {
   if (matchKey !== undefined) {
     if (schedule) {
       let ret = "";
-      Array.from(schedule).forEach(match => ret = match.key == matchKey ? match.alliances : ret);
+      Array.from(schedule).forEach(match => ret = match.key === matchKey ? match.alliances : ret);
       return ret;
     }
   }
@@ -1958,10 +1955,10 @@ function getMatch(matchKey) {
 }
 
 function getCurrentTeamNumberFromRobot() {
-  if (getRobot() != "" && typeof getRobot() !== 'undefined' && getCurrentMatch() != "") {
-    if (getRobot().charAt(0) == "r") {
+  if (getRobot() !== "" && typeof getRobot() !== 'undefined' && getCurrentMatch() !== "") {
+    if (getRobot().charAt(0) === "r") {
       return getCurrentMatch().red.team_keys[parseInt(getRobot().charAt(1)) - 1]
-    } else if (getRobot().charAt(0) == "b") {
+    } else if (getRobot().charAt(0) === "b") {
       return getCurrentMatch().blue.team_keys[parseInt(getRobot().charAt(1)) - 1]
     }
   }
@@ -1976,7 +1973,7 @@ function getCurrentMatch() {
 }
 
 function updateMatchStart(event) {
-  if ((getCurrentMatch() == "") ||
+  if ((getCurrentMatch() === "") ||
     (!teams)) {
     console.log("No match or team data.");
     return;
@@ -1985,8 +1982,8 @@ function updateMatchStart(event) {
     document.getElementById("input_t").value = getCurrentTeamNumberFromRobot().replace("frc", "");
     onTeamnameChange();
   }
-  if (event.target.id == "input_m") {
-    if (getRobot() != "" && typeof getRobot()) {
+  if (event.target.id === "input_m") {
+    if (getRobot() !== "" && typeof getRobot()) {
       document.getElementById("input_t").value = getCurrentTeamNumberFromRobot().replace("frc", "");
       onTeamnameChange();
     }
@@ -1996,8 +1993,8 @@ function updateMatchStart(event) {
 function onTeamnameChange(event) {
   let newNumber = document.getElementById("input_t").value;
   let teamLabel = document.getElementById("teamname-label");
-  if (newNumber != "") {
-    teamLabel.innerText = getTeamName(newNumber) != "" ? "You are scouting " + getTeamName(newNumber) : "That team isn't playing this match, please double check to verify correct number";
+  if (newNumber !== "") {
+    teamLabel.innerText = getTeamName(newNumber) !== "" ? "You are scouting " + getTeamName(newNumber) : "That team isn't playing this match, please double check to verify correct number";
   } else {
     teamLabel.innerText = "";
   }
@@ -2027,7 +2024,7 @@ function counter(element, step) {
   }
 
   // If associated with cycleTimer - send New Cycle EVENT
-  if (step >= 0 && cycleTimer != null) {
+  if (step >= 0 && cycleTimer !== null) {
     document.getElementById("cycle_" + cycleTimer.value).click();
   }
 }
@@ -2039,13 +2036,13 @@ function resetTimer(event) {
   inp.value = 0
 
   // stop timer
-  timerStatus = document.getElementById("status" + tId);
-  startButton = document.getElementById("start" + tId);
-  intervalIdField = document.getElementById("intervalId" + tId);
+  let timerStatus = document.getElementById("status" + tId);
+  let startButton = document.getElementById("start" + tId);
+  let intervalIdField = document.getElementById("intervalId" + tId);
   let intervalId = intervalIdField.value;
   timerStatus.value = 'stopped';
   startButton.setAttribute("value", "Start");
-  if (intervalId != '') {
+  if (intervalId !== '') {
     clearInterval(intervalId);
   }
   intervalIdField.value = '';
@@ -2054,17 +2051,19 @@ function resetTimer(event) {
 function timer(event) {
   let timerID = event.firstChild;
   let tId = getIdBase(timerID.id)
-  timerStatus = document.getElementById("status" + tId);
-  startButton = document.getElementById("start" + tId);
-  intervalIdField = document.getElementById("intervalId" + tId);
+  let timerStatus = document.getElementById("status" + tId);
+  let startButton = document.getElementById("start" + tId);
+  let intervalIdField = document.getElementById("intervalId" + tId);
   let statusValue = timerStatus.value;
   let intervalId = intervalIdField.value;
-  if (statusValue == 'stopped') {
+  if (statusValue === 'stopped') {
     timerStatus.value = 'started';
     startButton.setAttribute("value", "Stop");
 
-    let intId = setInterval(() => {
-      if (document.getElementById("status" + tId).value == 'started') {
+    intervalIdField.value = setInterval(() => {
+      let tTrunc;
+      let inp;
+      if (document.getElementById("status" + tId).value === 'started') {
         inp = document.getElementById("input" + tId);
         let t = parseFloat(inp.value);
         t += 0.1;
@@ -2072,7 +2071,6 @@ function timer(event) {
         inp.value = tTrunc;
       }
     }, 100);
-    intervalIdField.value = intId;
   } else {
     timerStatus.value = 'stopped';
     startButton.setAttribute("value", "Start");
@@ -2086,8 +2084,8 @@ function timer(event) {
 function undo(event) {
   let undoID = event.firstChild;
   //Getting rid of last value
-  changingXY = document.getElementById("XY" + getIdBase(undoID.id));
-  changingInput = document.getElementById("input" + getIdBase(undoID.id));
+  let changingXY = document.getElementById("XY" + getIdBase(undoID.id));
+  let changingInput = document.getElementById("input" + getIdBase(undoID.id));
   let tempValue = Array.from(JSON.parse(changingXY.value));
   tempValue.pop();
   changingXY.value = JSON.stringify(tempValue);
@@ -2101,7 +2099,7 @@ function undo(event) {
 function flip(event) {
   let flipID = event.firstChild;
   let flipImg = document.getElementById("canvas" + getIdBase(flipID.id));
-  if (flipImg.style.transform == "") {
+  if (flipImg.style.transform === "") {
     flipImg.style.transform = 'rotate(180deg)';
   } else {
     flipImg.style.transform = '';
@@ -2128,6 +2126,18 @@ function nextStylesheet() {
     clearInterval(rgbIntervalIdx)
   } else if (stylesheetIdx === 1) {
     stylesheet.href = "resources/css/bbqScoutingPASS_RGBColorTheme.css";
+    function updateRGB() {  // RGB theme :DDD
+      function getRandomColor() {
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+      let c = getRandomColor()
+      setColor(c)
+    }
     rgbIntervalIdx = setInterval(updateRGB, 1000)
   } else {
     stylesheet.href = "resources/css/bbqScoutingPASS_UwUTheme.css";
@@ -2161,37 +2171,20 @@ function setColor(c) {
     radio.style.color = 'black';
   });
 }
-// RGB theme :DDD
-function updateRGB() {
-  function getRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-  let c = getRandomColor()
-  setColor(c)
-}
 
 window.onload = function () {
   let ret = configure();
   if (ret !== -1) {
     let ece = document.getElementById("input_e");
     let ec = null;
-    if (ece != null) {
+    if (ece !== null) {
       ec = ece.value;
     }
-    if (ec != null) {
+    if (ec !== null) {
       getTeams(ec);
       getSchedule(ec);
     }
     this.drawFields();
-    if (enableGoogleSheets) {
-      console.log("Enabling Google Sheets.");
-      setUpGoogleSheets();
-    }
   }
   nextStylesheet()
 };
