@@ -450,12 +450,8 @@ function onShotFromClicked(event) {
     let x_level;
     let isTinyBot = false //tiny box
 
-    let placeholder2, placeholder3, placeholder4;
-    let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
-
-    alert(`${centerX} ${centerY}`)
-    if (35 < centerX < placeholder1 || placeholder2 < centerX < 265) {
-        if (placeholder3 < centerY < placeholder4){
+    if (48 < centerX && centerX < 68 || 230 < centerX && centerX < 255) {
+        if (60 < centerY && centerY < 90){
             x_level = 6
             isTinyBot = true
         }
@@ -1738,27 +1734,25 @@ function drawFields(name) {
           try {
             let y_level = 0
             let height = 160
-            let x_level;
-            let width;
+            let x_level = 0;
+            let width = 0;
+            // Tiny zone calculation stuff in methods: drawFields, onShotFromClicked
             let isTinyBot = false //tiny box
-            let placeholder1 = placeholder2 = placeholder3 = placeholder4 = 0
-
-              //placeholders -> 1: x of left of left box | 2: x of left of right box | 3: y of top of box | 4: y of bottom of box
-              //                   drawFields, onShotFromClicked
-            if (placeholder3 < centerY < placeholder4){
-                if (35 < centerX < placeholder1) {
-                    x_level = 35
-                    y_level = placeholder3
-                    width = placeholder1
-                    height = placeholder4 - placeholder3
+            if (60 < centerY && centerY < 90){
+                if (48 < centerX && centerX < 68) {
+                    x_level = 48
+                    width = 20
+                    y_level = 60
+                    height = 30
                     isTinyBot = true
-                }
-                else if (placeholder2 < centerX < 265){
-                    x_level = placeholder2
-                    y_level = placeholder3
-                    width = 265 - placeholder2
-                    height = placeholder4 - placeholder3
+                } else if (230 < centerX && centerX < 250){
+                    x_level = 230
+                    width = 20
+                    y_level = 60
+                    height = 30
                     isTinyBot = true
+                } else {
+                  isTinyBot = false
                 }
             }
             if (!isTinyBot){
