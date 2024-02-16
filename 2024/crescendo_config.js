@@ -218,16 +218,18 @@ const config_data = `
         {
             "name": "Ranking Points",
             "code": "rp",
-            "type": "text",
-            "size": 1,
-            "maxSize": 1
+            "type": "number",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 0
         },
         {
             "name": "Final Match Score",
             "code": "fms",
-            "type": "text",
-            "size": 1,
-            "maxSize": 3
+            "type": "number",
+            "min": 0,
+            "max": 1000,
+            "defaultValue": 0
         },
         {
             "name": "Notes",
