@@ -450,8 +450,8 @@ function onShotFromClicked(event) {
     let x_level;
     let isTinyBot = false //tiny box
 
-    if (48 < centerX && centerX < 68 || 230 < centerX && centerX < 255) {
-        if (60 < centerY && centerY < 90){
+    if (38 < centerX && centerX < 78 || 220 < centerX && centerX < 260) {
+        if (50 < centerY && centerY < 100){
             x_level = 6
             isTinyBot = true
         }
@@ -1738,18 +1738,18 @@ function drawFields(name) {
             let width = 0;
             // Tiny zone calculation stuff in methods: drawFields, onShotFromClicked
             let isTinyBot = false //tiny box
-            if (60 < centerY && centerY < 90){
-                if (48 < centerX && centerX < 68) {
-                    x_level = 48
-                    width = 20
-                    y_level = 60
-                    height = 30
+            if (50 < centerY && centerY < 100){
+                if (38 < centerX && centerX < 78) {
+                    x_level = 38
+                    width = 40
+                    y_level = 50
+                    height = 50
                     isTinyBot = true
-                } else if (230 < centerX && centerX < 250){
-                    x_level = 230
-                    width = 20
-                    y_level = 60
-                    height = 30
+                } else if (220 < centerX && centerX < 260){
+                    x_level = 220
+                    width = 40
+                    y_level = 50
+                    height = 50
                     isTinyBot = true
                 } else {
                   isTinyBot = false
