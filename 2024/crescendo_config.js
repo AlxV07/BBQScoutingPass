@@ -11,14 +11,14 @@ const config_data = `
             "type": "scouter",
             "size": 5,
             "maxSize": 5,
-            "defaultValue": "Alx",
+            "defaultValue": "",
             "required": "true"
         },
         {
             "name": "Event",
             "code": "e",
             "type": "event",
-            "defaultValue": "Null",
+            "defaultValue": "",
             "required": "true"
         },
         {
@@ -62,8 +62,9 @@ const config_data = `
             "code": "t",
             "type": "team",
             "min": 1,
-            "defaultValue": 2714,
-            "max": 99999
+            "defaultValue": "",
+            "max": 99999,
+	    "required": "true"
         },
         {
             "name": "Auto Start Position",
@@ -85,6 +86,7 @@ const config_data = `
             "code": "an",
             "type": "text",
             "size": 15,
+	    "defaultValue": "End with: ",
             "maxSize": 100
         },
         {
@@ -120,11 +122,6 @@ const config_data = `
             "name": "Coop Bonus",
             "code": "cp",
             "type": "bool"
-        },
-        {
-            "name": "Times Amplified by HP",
-            "code": "tam",
-            "type": "counter"
         },
         {
             "name": "Bicycle",
@@ -179,16 +176,6 @@ const config_data = `
             "type": "counter"
         },
         {
-            "name": "High Notes",
-            "code": "hn",
-            "type": "counter"
-        },
-        {
-            "name": "Failed High Notes",
-            "code": "fhn",
-            "type": "counter"
-        },
-        {
             "name": "Defense Rating",
             "code": "dr",
             "type": "radio",
@@ -218,18 +205,16 @@ const config_data = `
         {
             "name": "Ranking Points",
             "code": "rp",
-            "type": "number",
-            "min": 0,
-            "max": 10,
-            "defaultValue": 0
+            "type": "text",
+            "size": 1,
+            "maxSize": 1
         },
         {
             "name": "Final Match Score",
             "code": "fms",
-            "type": "number",
-            "min": 0,
-            "max": 1000,
-            "defaultValue": 0
+            "type": "text",
+            "size": 1,
+            "maxSize": 3
         },
         {
             "name": "Notes",
