@@ -138,7 +138,7 @@ function saveCycle(code_identifier) {
     if (src_value === undefined) {
       undefined_vars.push('\"Source\"')
     }
-    if (shotfrom_value === undefined) {
+    if (shotfrom_value === null) {
       undefined_vars.push('\"Shot From Region\"')
     }
     if (tar_value === undefined) {
