@@ -41,6 +41,8 @@ let options = {
   quietZoneColor: '#FFFFFF'
 };
 
+let requiredFields = ["e", "m", "l", "r", "s", "t", "as"];
+
 let prev_cycle_end_time = null
 let cycles = []
 
@@ -1529,7 +1531,35 @@ function getData(dataFormat) {
     return `${strArray.join(";")};gat=[${gametimes.join(',')}];src=[${sources.join(',')}];zis=[${zone_ids.join(',')}];tar=[${targets.join(',')}];sts=[${statuses.join(',')}];tim=[${times.join(',')}]`
 }
 
+function validateData() {
+  var ret = true;
+  var errStr = "";
+  for (rf of requiredFields) {
+    var thisRF = document.forms.scoutingForm[rf];
+    if (thisRF.value == "[]" || thisRF.value.length == 0) {
+      if (rf == "as") {
+        rftitle = "Auto Start Position"
+      } else {
+        thisInputEl = thisRF instanceof RadioNodeList ? thisRF[0] : thisRF;
+        rftitle = thisInputEl.parentElement.parentElement.children[0].innerHTML.replace("&nbsp;","");
+      }
+      errStr += rf + ": " + rftitle + "\n";
+      ret = false;
+    }
+  }
+  if (ret == false) {
+    alert("Enter all required values\n" + errStr);
+  }
+  return ret
+}
+
 function qr_regenerate() {
+  if (!pitScouting) {  
+    if (validateData() == false) {
+      // Don't allow a swipe until all required data is filled in
+      return false
+    }
+  }
   let data = getData(dataFormat)
   qr.makeCode(data)
   let str = 'Event: !EVENT! Match: !MATCH! Robot: !ROBOT! Team: !TEAM!';
@@ -1565,7 +1595,7 @@ function clearForm() {
     }
 
     // Robot
-    resetRobot()
+    //resetRobot()
   }
 
   try {
