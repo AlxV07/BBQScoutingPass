@@ -11,14 +11,14 @@ const config_data = `
             "type": "scouter",
             "size": 5,
             "maxSize": 5,
-            "defaultValue": "",
+            "defaultValue": "Alx",
             "required": "true"
         },
         {
             "name": "Event",
             "code": "e",
             "type": "event",
-            "defaultValue": "",
+            "defaultValue": "Poo",
             "required": "true"
         },
         {
@@ -62,7 +62,7 @@ const config_data = `
             "code": "t",
             "type": "team",
             "min": 1,
-            "defaultValue": "",
+            "defaultValue": "1",
             "max": 99999,
 	    "required": "true"
         },

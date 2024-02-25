@@ -138,7 +138,7 @@ function saveCycle(code_identifier) {
     if (src_value === undefined) {
       undefined_vars.push('\"Source\"')
     }
-    if (shotfrom_value === null) {
+    if (shotfrom_value === null || shotfrom_value === 'null') {
       undefined_vars.push('\"Shot From Region\"')
     }
     if (tar_value === undefined) {
@@ -175,6 +175,18 @@ function clearCycle(code_identifier) {
     let code = e.id.substring(3)
     e.value = "[]"
   }
+
+  let shotfrom_component = document.getElementById('canvas_' + code_identifier + 'shotfrom')
+  console.log(shotfrom_component)
+  shotfrom_component.setAttribute('grid_coords', null)
+  // inputs = new Set(document.querySelectorAll("[tag='canvas']"));
+  // for (let e of inputs) {
+  //   if (e.getAttribute('grid_coords') !== undefined && e.getAttribute('grid_coords') !== null) {
+  //     e.grid_coords = null
+  //     alert('poo')
+  //   }
+  // }
+
   inputs = new Set(document.querySelectorAll("[id*='input_']"));
   for (let e of inputs) {
     let code = e.id.substring(6)
