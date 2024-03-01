@@ -18,7 +18,7 @@ const config_data = `
             "name": "Event",
             "code": "e",
             "type": "event",
-            "defaultValue": "Poo",
+            "defaultValue": "2024txwac",
             "required": "true"
         },
         {

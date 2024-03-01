@@ -2219,6 +2219,7 @@ window.onload = function () {
       ec = ece.value;
     }
     if (ec !== null) {
+      console.log(ec)
       getTeams(ec);
       getSchedule(ec);
     }
