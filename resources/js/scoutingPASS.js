@@ -373,7 +373,8 @@ function addBicycle(table, idx, name, data) {
       "p3": "P3<br>",
       "c4": "C4<br>",
       "c5": "C5"
-     }
+     },
+     "defaultValue": "pl"
      }`)
   } else {  // Teleop intake
     source_data = JSON.parse(`{ 
@@ -386,7 +387,8 @@ function addBicycle(table, idx, name, data) {
       "oga": "O.G. Auton<br>",
       "g": "Ground<br>",
       "ap": "Alliance Partner"
-     }
+     },
+     "defaultValue": "hpg"
      }`)
   }
   idx = addRadio(table, idx, source_data.name, source_data) // Source
@@ -409,9 +411,9 @@ function addBicycle(table, idx, name, data) {
    "choices": {
     "par": "Alliance Parter<br>",
     "amp": "Amp<br>",
-    "spe": "Speaker<br>",
-    "amp_spe": "Amplified Speaker"
-   }
+    "spe": "Speaker<br>"
+   },
+   "defaultValue": "spe"
   }`)
   idx = addRadio(table, idx, target_data.name, target_data)  // Target
 
