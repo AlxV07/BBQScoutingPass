@@ -11,7 +11,7 @@ const config_data = `
             "type": "scouter",
             "size": 5,
             "maxSize": 5,
-            "defaultValue": "Alx",
+            "defaultValue": "",
             "required": "true"
         },
         {
@@ -54,7 +54,6 @@ const config_data = `
                 "r3": "Red-3",
                 "b3": "Blue-3"
             },
-            "defaultValue": "r1",
             "required": "true"
         },
         {
@@ -206,14 +205,14 @@ const config_data = `
             "name": "Ranking Points",
             "code": "rp",
             "type": "text",
-            "size": 1,
-            "maxSize": 1
+            "size": 3,
+            "maxSize": 3
         },
         {
             "name": "Final Match Score",
             "code": "fms",
             "type": "text",
-            "size": 1,
+            "size": 3,
             "maxSize": 3
         },
         {
