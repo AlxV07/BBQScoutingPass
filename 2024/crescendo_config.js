@@ -11,7 +11,7 @@ const config_data = `
             "type": "scouter",
             "size": 5,
             "maxSize": 5,
-            "defaultValue": "",
+            "defaultValue": "AJ",
             "required": "true"
         },
         {
@@ -61,7 +61,6 @@ const config_data = `
             "code": "t",
             "type": "team",
             "min": 1,
-            "defaultValue": "1",
             "max": 99999,
 	    "required": "true"
         },
@@ -85,7 +84,7 @@ const config_data = `
             "code": "an",
             "type": "text",
             "size": 15,
-	    "defaultValue": "End with: ",
+	        "defaultValue": "",
             "maxSize": 100
         },
         {
@@ -93,6 +92,23 @@ const config_data = `
             "code": "teleopbicycle",
             "type": "bicycle",
             "bicycle_id": "auton"
+        },
+        {
+            "name": "End with:",
+            "code": "ew",
+            "type": "radio",
+             "choices": {
+              "c1": "C1",
+              "p1": "P1",
+              "pl": "Preload<br>",
+              "c2": "C2",
+              "p2": "P2<br>",
+              "c3": "C3",
+              "p3": "P3<br>",
+              "c4": "C4<br>",
+              "c5": "C5"
+             },
+             "defaultValue": "pl"
         }
     ],
     "teleop": [
@@ -100,7 +116,6 @@ const config_data = `
             "name": "Defense Timer",
             "code": "dt",
             "type": "timer"
-        
         },
         {
             "name": "Shots blocked",
@@ -118,8 +133,28 @@ const config_data = `
             "type": "counter"
         },
         {
-            "name": "Coop Bonus",
-            "code": "cp",
+            "name": "HP Ground",
+            "code": "hpg",
+            "type": "bool"
+        },
+        {
+            "name": "HP Other",
+            "code": "hpo",
+            "type": "bool"
+        },
+        {
+            "name": "Ground",
+            "code": "",
+            "type": "bool"
+        },
+        {
+            "name": "O.G. Auton",
+            "code": "oga",
+            "type": "bool"
+        },
+        {
+            "name": "Alliance Partner",
+            "code": "al",
             "type": "bool"
         },
         {
@@ -200,6 +235,11 @@ const config_data = `
                 "f": "5 "
             },
             "defaultValue": "a"
+        },
+        {
+            "name": "Coop Bonus",
+            "code": "cp",
+            "type": "bool"
         },
         {
             "name": "Ranking Points",
