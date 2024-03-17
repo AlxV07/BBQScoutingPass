@@ -149,13 +149,13 @@ tr {
 
 input {
     font-family: BBQScoutingPass, ui-monospace;
-    font-size: 16px;
+    font-size: 15px;
     color: orangered;
     background-color: white;
 }
 input[type='radio']:checked:after {
-    width: 9px;
-    height: 9px;
+    width: 15px;
+    height: 15px;
     border-radius: 9px;
     position: relative;
     background-color: orangered;
@@ -164,7 +164,35 @@ input[type='radio']:checked:after {
     visibility: visible;
     content: '';
 }
-
+input[type='radio'] {
+    width: 20px;
+    height: 20px;
+    border-radius: 9px;
+    position: relative;
+    background-color: orangered;
+    border: 2px solid white;
+    display: inline-block;
+    visibility: visible;
+    content: '';
+}
+input[type='checkbox']:checked:after {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    border: 2px solid white;
+    display: inline-block;
+    visibility: visible;
+    content: '';
+}
+input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    border: 2px solid white;
+    display: inline-block;
+    visibility: visible;
+    content: '';
+}
 #qr-table {
     text-align: center;
     color: black;
