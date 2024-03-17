@@ -61,7 +61,8 @@ class Cycle {
       ["c4","g"],
       ["c5","h"],
       ["pl","p"],// preload
-      ['ap', "5"] // alliance partner
+      ['ap', "5"],// alliance partner
+      ['x', "x"] //no source
   ])
   static target_condense_map = new Map([
         ['par', 0],
@@ -94,7 +95,7 @@ class Cycle {
   }
 }
 
-function nextCycle(code_identifier) {
+function nextSuccessfulCycle(code_identifier) {
   let cycleText;
   if (code_identifier.endsWith('a')) {
     cycleText = 'Auton'
@@ -102,13 +103,13 @@ function nextCycle(code_identifier) {
     cycleText = 'Teleop'
   }
 
-  let undefined_vars = saveCycle(code_identifier)
+  let undefined_vars = saveCycle(code_identifier, 1)
   if (undefined_vars.length > 0) {  // More than 0 undefined vars
     alert(`Missing fields in ${cycleText} Cycle Form: ${undefined_vars.join(', ')}`)
     return
   }
   try {
-    clearCycle(code_identifier)
+    //clearCycle(code_identifier)
   } catch (e) {
     alert(e)
   }
@@ -118,19 +119,51 @@ function nextCycle(code_identifier) {
   break_component.innerHTML = `${cycleText} Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
 }
 
-function saveCycle(code_identifier) {
-    let Form = document.forms.scoutingForm;
-    let src = Form[`${code_identifier}src`]
-    let src_value = Cycle.src_condense_map.get(src.value ? src.value.replace(/"/g, '').replace(/;/g, "-") : "");
+function nextFailedCycle(code_identifier) {
+  let cycleText;
+  if (code_identifier.endsWith('a')) {
+    cycleText = 'Auton'
+  } else {
+    cycleText = 'Teleop'
+  }
 
+  let undefined_vars = saveCycle(code_identifier, 0)
+  if (undefined_vars.length > 0) {  // More than 0 undefined vars
+    alert(`Missing fields in ${cycleText} Cycle Form: ${undefined_vars.join(', ')}`)
+    return
+  }
+  try {
+    //clearCycle(code_identifier)
+  } catch (e) {
+    alert(e)
+  }
+  let break_component = document.getElementById(`break_${code_identifier}break`)
+  break_component.setAttribute("nof_cycles", (parseInt(break_component.getAttribute("nof_cycles"))+1).toString())
+  break_component.setAttribute("prev_cycle_end_time", Date.now().toString())
+  break_component.innerHTML = `${cycleText} Cycle Form (${break_component.getAttribute("nof_cycles")}):` + '&nbsp;';
+}
+
+function saveCycle(code_identifier, successful) {
+    let Form = document.forms.scoutingForm;
+
+    let src;
+    let src_value;
+    if (code_identifier.endsWith('a')) {
+      src = Form[`${code_identifier}src`]
+      src_value = Cycle.src_condense_map.get(src.value ? src.value.replace(/"/g, '').replace(/;/g, "-") : "");  
+    } else {
+      src = "x"
+      src_value = "x"
+    }
+    
     let shotfrom = document.getElementById('canvas_' + code_identifier + 'shotfrom')
     let shotfrom_value = shotfrom.getAttribute('grid_coords')
 
     let tar = Form[`${code_identifier}tar`]
     let tar_value = Cycle.target_condense_map.get(tar.value ? tar.value.replace(/"/g, '').replace(/;/g, "-") : "");
 
-    let success = Form[`${code_identifier}success`]
-    let success_value = success.checked ? 1 : 0;
+    //let success = Form[`${code_identifier}success`]
+    let success_value = successful /*success.checked ? 1 : 0*/;
 
     let gametime = code_identifier.endsWith('a') ? 1 : 2
 
@@ -254,7 +287,7 @@ function clearCycle(code_identifier) {
   drawFields()
 }
 
-function addNextCycleButton(table, idx, name, data, code_identifier) {
+function addNextSuccessfulCycleButton(table, idx, name, data, code_identifier) {
   let row = table.insertRow(idx);
   let cell1 = row.insertCell(0);
   cell1.classList.add("title");
@@ -267,7 +300,33 @@ function addNextCycleButton(table, idx, name, data, code_identifier) {
   let inp = document.createElement("input");
   inp.setAttribute("id", "input_" + data.code);
   inp.setAttribute("type", "button");
-  inp.setAttribute("onclick", `nextCycle(\"${code_identifier}\")`)
+  inp.setAttribute("onclick", `nextSuccessfulCycle(\"${code_identifier}\")`)
+  inp.setAttribute("value", "Next Cycle")
+  inp.setAttribute("name", data.code);
+  if (data.hasOwnProperty('defaultValue')) {
+    inp.setAttribute("value", data.defaultValue);
+  }
+  if (data.hasOwnProperty('disabled')) {
+    inp.setAttribute("disabled", "");
+  }
+  cell2.appendChild(inp);
+  return idx + 1;
+}
+
+function addNextFailedCycleButton(table, idx, name, data, code_identifier) {
+  let row = table.insertRow(idx);
+  let cell1 = row.insertCell(0);
+  cell1.classList.add("title");
+  if (!data.hasOwnProperty('code')) {
+    cell1.innerHTML = `Error: No code specified for ${name}`;
+    return idx + 1;
+  }
+  cell1.innerHTML = name + '&nbsp;';
+  let cell2 = row.insertCell(1)
+  let inp = document.createElement("input");
+  inp.setAttribute("id", "input_" + data.code);
+  inp.setAttribute("type", "button");
+  inp.setAttribute("onclick", `nextFailedCycle(\"${code_identifier}\")`)
   inp.setAttribute("value", "Next Cycle")
   inp.setAttribute("name", data.code);
   if (data.hasOwnProperty('defaultValue')) {
@@ -364,9 +423,9 @@ function addBicycle(table, idx, name, data) {
      "code": "${code_identifier}src",
      "type": "radio",
      "choices": {
-      "pl": "Preload<br>",
       "c1": "C1",
-      "p1": "P1<br>",
+      "p1": "P1",
+      "pl": "Preload<br>",
       "c2": "C2",
       "p2": "P2<br>",
       "c3": "C3",
@@ -391,7 +450,9 @@ function addBicycle(table, idx, name, data) {
      "defaultValue": "hpg"
      }`)
   }
-  idx = addRadio(table, idx, source_data.name, source_data) // Source
+  if (code_identifier === bicycle_component_identifier + 'a') {
+	  idx = addRadio(table, idx, source_data.name, source_data) // Source
+  }
 
   let shot_from_data = JSON.parse(`{
       "name": "Shot From Region:",
@@ -417,6 +478,7 @@ function addBicycle(table, idx, name, data) {
   }`)
   idx = addRadio(table, idx, target_data.name, target_data)  // Target
 
+  /*
   let successful_data = JSON.parse(`
   { 
    "name": "Successful?",
@@ -424,14 +486,23 @@ function addBicycle(table, idx, name, data) {
    "type": "bool"
    }`)
   idx = addCheckbox(table, idx, successful_data.name, successful_data) // Successful?
+  */
 
-  let next_button_data = JSON.parse(`
+  let next_successful_button_data = JSON.parse(`
   { 
-    "name": "Next Cycle:",
-    "code": "${code_identifier}nc",
+    "name": "Make:",
+    "code": "${code_identifier}nsc",
     "type": "nextCycleButton"
   }`)
-  idx = addNextCycleButton(table, idx, next_button_data.name, next_button_data, code_identifier)
+  idx = addNextSuccessfulCycleButton(table, idx, next_successful_button_data.name, next_successful_button_data, code_identifier)
+
+  let next_failed_button_data = JSON.parse(`
+  { 
+    "name": "Miss:",
+    "code": "${code_identifier}nfc",
+    "type": "nextCycleButton"
+  }`)
+  idx = addNextFailedCycleButton(table, idx, next_failed_button_data.name, next_failed_button_data, code_identifier)
 
   return idx
 }
@@ -1609,7 +1680,7 @@ function clearForm() {
     }
 
     // Robot
-    //resetRobot()
+    resetRobot()
   }
 
   try {
@@ -1630,10 +1701,10 @@ function clearForm() {
       if (code.substring(0, 2) === "l_") continue
       if (code === "e") continue
       if (code === "s") continue
-      
-      if (code === "an") {
-        e.value = "End with: ";
-        continue;
+
+      if (code == "r") {
+	      e.value = undefined;
+	      continue;
       }
 
       if (e.className === "clickableImage") {
