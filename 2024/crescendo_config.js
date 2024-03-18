@@ -11,14 +11,14 @@ const config_data = `
             "type": "scouter",
             "size": 5,
             "maxSize": 5,
-            "defaultValue": "AJ",
+            "defaultValue": "",
             "required": "true"
         },
         {
             "name": "Event",
             "code": "e",
             "type": "event",
-            "defaultValue": "2024txwac",
+            "defaultValue": "2024txdal",
             "required": "true"
         },
         {
