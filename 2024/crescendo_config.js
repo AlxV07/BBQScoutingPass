@@ -103,7 +103,7 @@ const config_data = `
               "pl": "Preload<br>",
               "c2": "C2",
               "p2": "P2",
-	      "na": "Nothing<br>"
+	      "na": "Nothing<br>",
               "c3": "C3",
               "p3": "P3<br>",
               "c4": "C4<br>",
