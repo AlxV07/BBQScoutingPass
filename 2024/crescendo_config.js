@@ -76,7 +76,7 @@ const config_data = `
     "auton": [
         {
             "name": "Left Starting Zone",
-            "code": "al",
+            "code": "as",
             "type": "bool"
         },
         {
@@ -145,7 +145,7 @@ const config_data = `
         },
         {
             "name": "Ground",
-            "code": "",
+            "code": "gr",
             "type": "bool"
         },
         {
