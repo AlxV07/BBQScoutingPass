@@ -76,7 +76,7 @@ const config_data = `
     "auton": [
         {
             "name": "Left Starting Zone",
-            "code": "as",
+            "code": "las",
             "type": "bool"
         },
         {
